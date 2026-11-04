@@ -1,0 +1,1696 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="author" content="Simoruja"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Mystery Math Arcade</title><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Lexend:wght@400;500;600&family=Libre+Caslon+Text:ital,wght@1,400;1,700&display=swap">
+<style>
+:root{
+  --paper:#F4F6FA; --grid:#E3E8F1; --card:#FFFFFF; --ink:#1A2340; --muted:#566079; --line:#CDD5E3;
+  --alg:#227565; --fsb:#A8326B; --nb:#D9481A; --on-accent:#FFFFFF;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#141A26; --grid:#1C2433; --card:#1B2333; --ink:#EDF1F8; --muted:#A7B1C5; --line:#33405A;
+    --alg:#5CC6AE; --fsb:#F07BAE; --nb:#FF7A45; --on-accent:#141A26; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#141A26; --grid:#1C2433; --card:#1B2333; --ink:#EDF1F8; --muted:#A7B1C5; --line:#33405A;
+  --alg:#5CC6AE; --fsb:#F07BAE; --nb:#FF7A45; --on-accent:#141A26; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--paper); color:var(--ink); font-family:"Lexend", "Segoe UI", system-ui, sans-serif; margin:0}
+body.g-hub{background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size:26px 26px}
+
+.appbar{display:flex; align-items:center; justify-content:space-between; gap:12px; max-width:780px; margin:0 auto; padding-block:12px 0;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); font-size:.9rem}
+.appbar a{color:var(--ink); font-weight:600; text-decoration:none; border:2px solid var(--line); border-radius:999px; padding:4px 14px; background:var(--card)}
+.appbar a:hover{border-color:var(--ink)}
+.appbar a:focus-visible{outline:3px solid var(--muted); outline-offset:2px}
+.appbar span{color:var(--muted); font-weight:500}
+
+.hub{max-width:900px; margin:0 auto; padding-block:28px 56px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:flex; flex-direction:column; gap:24px}
+.hub-head{display:flex; flex-direction:column; gap:10px}
+.hub-head h1{font-family:"Baloo 2", "Trebuchet MS", system-ui, sans-serif; font-weight:800; font-size:clamp(2.4rem, 9vw, 4rem); line-height:1; margin:0; text-wrap:balance}
+.hub-head p{margin:0; max-width:60ch; color:var(--muted); font-size:1.08rem; line-height:1.55}
+.hub-games{display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:14px}
+@media (max-width:760px){ .hub-games{grid-template-columns:1fr} }
+.hub-card{background:var(--card); border:2px solid var(--line); border-radius:16px; overflow:hidden; display:flex; flex-direction:column; min-width:0}
+.hub-band{height:96px; display:flex; align-items:center; justify-content:center; font-family:"Baloo 2", system-ui, sans-serif; font-weight:800; font-size:3rem; color:var(--on-accent); letter-spacing:.02em}
+.hub-band.alg{background:var(--alg)} .hub-band.fsb{background:var(--fsb)} .hub-band.nb{background:var(--nb); font-family:"Bricolage Grotesque", system-ui, sans-serif}
+.hub-band .frac{display:inline-flex; flex-direction:column; align-items:center; line-height:.9; font-size:.8em}
+.hub-band .frac span:last-child{border-top:.08em solid currentColor}
+.hub-body{padding:16px; display:flex; flex-direction:column; gap:8px; flex:1}
+.hub-body h2{font-family:"Baloo 2", system-ui, sans-serif; font-weight:800; font-size:1.45rem; line-height:1.1; margin:0}
+.hub-skill{font-size:.75rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.hub-body p{margin:0; font-size:.93rem; line-height:1.5}
+.hub-prog{font-size:.85rem; color:var(--muted); font-variant-numeric:tabular-nums}
+.hub-play{margin-top:auto; align-self:flex-start; text-decoration:none; font-weight:700; padding:10px 22px; border-radius:12px; color:var(--on-accent); font-family:"Baloo 2", system-ui, sans-serif; font-size:1.15rem}
+.hub-play.alg{background:var(--alg)} .hub-play.fsb{background:var(--fsb)} .hub-play.nb{background:var(--nb)}
+.hub-play:hover{filter:brightness(1.08)}
+.hub-play:focus-visible{outline:3px solid var(--ink); outline-offset:2px}
+.hub-note{font-size:.9rem; color:var(--muted); border-top:2px dashed var(--line); padding-top:14px; display:flex; flex-direction:column; gap:6px}
+.hub-note b{color:var(--ink)}
+.hub-note p{margin:0; max-width:70ch}
+
+.g-alg{
+  --paper:#F5F8FC; --grid:#E2E9F3; --card:#FFFFFF; --ink:#1C2942; --muted:#56637E; --line:#CBD5E4;
+  --box:#227565; --box-soft:#DCF0EA; --unit:#E07A2F; --unit-soft:#FCE9DA; --hl:#FFE35A; --hl-ink:#1C2942;
+  --good:#23804F; --good-soft:#DDF3E6; --bad:#B8323D; --bad-soft:#FBE3E5; --on-box:#FFFFFF;
+  --display:"Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  --body:"Lexend", "Segoe UI", system-ui, sans-serif;
+  --var:"Libre Caslon Text", Georgia, "Times New Roman", serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .g-alg{
+    --paper:#14211E; --grid:#1D2E2A; --card:#1B2B27; --ink:#EAF2EE; --muted:#A6BBB3; --line:#33504A;
+    --box:#5CC6AE; --box-soft:#1F3F38; --unit:#F2A05C; --unit-soft:#3D2C1D; --hl:#F3D640; --hl-ink:#1C2942;
+    --good:#62CF92; --good-soft:#1C3A2B; --bad:#F27E87; --bad-soft:#3E2326; --on-box:#10201C; color-scheme:dark;
+  }}
+:root[data-theme="dark"] .g-alg{
+  --paper:#14211E; --grid:#1D2E2A; --card:#1B2B27; --ink:#EAF2EE; --muted:#A6BBB3; --line:#33504A;
+  --box:#5CC6AE; --box-soft:#1F3F38; --unit:#F2A05C; --unit-soft:#3D2C1D; --hl:#F3D640; --hl-ink:#1C2942;
+  --good:#62CF92; --good-soft:#1C3A2B; --bad:#F27E87; --bad-soft:#3E2326; --on-box:#10201C; color-scheme:dark;
+}
+.g-alg *{box-sizing:border-box}
+.g-alg{
+  background-color:var(--paper); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.55;
+  background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:26px 26px;
+}
+.g-alg .page{max-width:760px; margin:0 auto; padding-block:16px 48px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:flex; flex-direction:column; gap:20px}
+.g-alg h1,.g-alg h2,.g-alg h3{font-family:var(--display); line-height:1.1; text-wrap:balance; margin:0}
+.g-alg h1{font-size:clamp(2.3rem, 8vw, 3.6rem); font-weight:800}
+.g-alg h2{font-size:1.6rem; font-weight:800}
+.g-alg p{margin:0; max-width:62ch}
+.g-alg .v{font-family:var(--var); font-style:italic; font-weight:700; background:var(--hl); color:var(--hl-ink); padding:0 .16em; border-radius:3px}
+.g-alg .num{font-variant-numeric:tabular-nums}
+.g-alg .muted{color:var(--muted)}
+.g-alg button{font:inherit; cursor:pointer; border-radius:12px; border:2px solid var(--ink); background:var(--card); color:var(--ink); padding:8px 16px; font-weight:600}
+.g-alg button:hover:not(:disabled){background:var(--box-soft)}
+.g-alg button:focus-visible{outline:3px solid var(--unit); outline-offset:2px}
+.g-alg button:disabled{cursor:not-allowed}
+.g-alg .primary{background:var(--box); border-color:var(--box); color:var(--on-box)}
+.g-alg .primary:hover:not(:disabled){background:var(--box); filter:brightness(1.08)}
+.g-alg .big{font-family:var(--display); font-size:1.25rem; font-weight:800; padding:10px 22px}
+.g-alg .top{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap}
+.g-alg .brand{font-family:var(--display); font-weight:800; font-size:1.15rem}
+.g-alg .top-right{display:flex; align-items:center; gap:10px}
+.g-alg .coin{display:inline-block; width:.95em; height:.95em; border-radius:50%; background:var(--unit); box-shadow:inset 0 0 0 2px var(--unit-soft); vertical-align:-.12em; margin-right:.3em}
+.g-alg .coins{font-weight:600}
+.g-alg .small-btn{padding:4px 12px; font-size:.85rem; border-width:2px}
+.g-alg .hero{display:flex; flex-direction:column; gap:12px}
+.g-alg .lead{font-size:1.1rem; color:var(--muted)}
+.g-alg .codebook{display:flex; flex-wrap:wrap; gap:10px}
+.g-alg .code{font-family:var(--display); font-weight:800; font-size:1.25rem; border:2px dashed var(--box); border-radius:10px; padding:6px 14px; background:var(--card)}
+.g-alg .levels{display:grid; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr)); gap:12px}
+.g-alg .level{text-align:left; display:grid; grid-template-columns:auto 1fr; gap:2px 12px; align-items:center; padding:14px; border:2px solid var(--line); background:var(--card)}
+.g-alg .level .lv-num{grid-row:span 3; width:48px; height:48px; border-radius:10px; background:var(--box); color:var(--on-box); font-family:var(--display); font-weight:800; font-size:1.6rem; display:grid; place-items:center}
+.g-alg .level .lv-name{font-family:var(--display); font-weight:800; font-size:1.15rem; line-height:1.15}
+.g-alg .level .lv-blurb{font-size:.82rem; color:var(--muted); font-weight:400; line-height:1.35}
+.g-alg .stars{color:var(--unit); letter-spacing:.12em; font-size:1.05rem}
+.g-alg .stars .off{color:var(--line)}
+.g-alg .level:disabled{background:var(--paper); border-style:dashed}
+.g-alg .level:disabled .lv-num{background:var(--line); color:var(--muted)}
+.g-alg .level:disabled .lv-name{color:var(--muted)}
+.g-alg .speed{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:14px; padding:18px; border:3px solid var(--unit); border-radius:14px; background:var(--unit-soft)}
+.g-alg .speed h2{font-size:1.4rem}
+.g-alg .howto{font-size:.92rem; color:var(--muted); display:flex; flex-direction:column; gap:6px; border-top:2px dashed var(--line); padding-top:14px}
+.g-alg .howto b{color:var(--ink)}
+.g-alg .stage{background:var(--card); border:2px solid var(--line); border-radius:16px; padding:18px; display:flex; flex-direction:column; gap:16px; position:relative; overflow:hidden; min-width:0}
+.g-alg .hud{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 14px}
+.g-alg .hud-title{font-family:var(--display); font-weight:800; font-size:1.1rem}
+.g-alg .hud-stats{display:flex; align-items:center; gap:14px; font-weight:600}
+.g-alg .hearts{display:flex; gap:4px}
+.g-alg .hearts svg{width:22px; height:22px}
+.g-alg .hearts .full{fill:var(--bad)}
+.g-alg .hearts .empty{fill:var(--line)}
+.g-alg .streak{font-size:.85rem; padding:2px 10px; border-radius:999px; background:var(--paper); border:2px solid var(--line)}
+.g-alg .streak.hot{background:var(--hl); color:var(--hl-ink); border-color:var(--hl-ink)}
+.g-alg .track{display:flex; gap:6px}
+.g-alg .track i{flex:1; height:10px; border-radius:5px; background:var(--line); display:block}
+.g-alg .track i.ok{background:var(--good)}
+.g-alg .track i.no{background:var(--bad)}
+.g-alg .track i.now{background:var(--unit)}
+.g-alg .timer{height:12px; border-radius:6px; background:var(--line); overflow:hidden}
+.g-alg .timer div{height:100%; background:var(--unit); width:100%}
+.g-alg .timer.low div{background:var(--bad)}
+.g-alg .prompt{font-family:var(--display); font-weight:800; font-size:clamp(1.5rem, 6vw, 2.1rem); line-height:1.2}
+.g-alg .visual{min-height:110px; display:flex; flex-direction:column; gap:10px; justify-content:center}
+.g-alg .boxes{display:flex; flex-wrap:wrap; gap:10px}
+.g-alg .box{width:86px; border:3px solid var(--box); border-radius:10px; background:var(--box-soft); display:flex; flex-direction:column; align-items:center; padding:5px 5px 8px; gap:4px}
+.g-alg .box-tag{font-family:var(--var); font-style:italic; font-weight:700; font-size:.95rem; color:var(--box)}
+.g-alg .dots{display:grid; grid-template-columns:repeat(3, 16px); gap:5px; min-height:58px; align-content:center; justify-content:center}
+.g-alg .dot{width:16px; height:16px; border-radius:50%; background:var(--unit)}
+.g-alg .q{font-family:var(--display); font-size:2.2rem; font-weight:800; color:var(--box); line-height:58px; grid-column:1/-1}
+.g-alg .pile{display:flex; flex-wrap:wrap; gap:5px; padding:10px; border:2px dashed var(--unit); border-radius:10px; min-height:40px}
+.g-alg .pile .dot{width:14px; height:14px}
+.g-alg .label{font-size:.85rem; color:var(--muted)}
+.g-alg .tiles{display:flex; flex-wrap:wrap; gap:10px}
+.g-alg .tile{font-family:var(--display); font-weight:800; font-size:1.6rem; padding:6px 18px; border:3px solid var(--box); border-radius:12px; background:var(--box-soft)}
+.g-alg .codecard{font-family:var(--display); font-weight:800; font-size:1.7rem; padding:10px 18px; border:3px dashed var(--box); border-radius:12px; align-self:flex-start}
+.g-alg .opts{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px}
+.g-alg .opt{font-family:var(--display); font-size:1.7rem; font-weight:800; padding:14px 10px; position:relative; min-height:72px}
+.g-alg .opt .key{position:absolute; top:6px; left:10px; font-family:var(--body); font-size:.7rem; font-weight:500; color:var(--muted)}
+.g-alg .opt.right{background:var(--good-soft); border-color:var(--good)}
+.g-alg .opt.wrong{background:var(--bad-soft); border-color:var(--bad)}
+.g-alg .opt:disabled:not(.right):not(.wrong){opacity:.5}
+.g-alg .feedback{padding:12px 14px; border-radius:12px; display:flex; flex-direction:column; gap:8px}
+.g-alg .feedback.good{background:var(--good-soft)}
+.g-alg .feedback.bad{background:var(--bad-soft)}
+.g-alg .feedback b{font-family:var(--display); font-size:1.25rem}
+.g-alg .feedback .row{display:flex; justify-content:flex-end}
+.g-alg .float{position:absolute; font-family:var(--display); font-weight:800; font-size:1.6rem; color:var(--unit); pointer-events:none; right:24px; top:60px}
+.g-alg .end{align-items:flex-start; text-align:left}
+.g-alg .end-title{font-size:clamp(2rem, 8vw, 3rem)}
+.g-alg .big-stars{font-size:3rem; color:var(--unit); letter-spacing:.1em; line-height:1}
+.g-alg .big-stars .off{color:var(--line)}
+.g-alg .big-score{font-family:var(--display); font-size:3.6rem; font-weight:800; line-height:1}
+.g-alg .btn-row{display:flex; flex-wrap:wrap; gap:10px}
+.g-alg .shelf{display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:10px}
+.g-alg .shelf-item{display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center; font-size:.8rem; font-weight:600; line-height:1.2}
+.g-alg .shelf-item.locked{color:var(--muted); font-weight:400}
+.g-alg .buddy{width:100%; max-width:72px; height:auto}
+.g-alg .story{font-size:.95rem; color:var(--muted); border:2px dashed var(--line); border-radius:10px; padding:8px 12px}
+.g-alg .hp{display:flex; flex-direction:column; gap:4px}
+.g-alg .hp-row{display:flex; align-items:center; gap:10px}
+.g-alg .hp-row .buddy{max-width:48px; flex:none}
+.g-alg .hp-bar{flex:1; height:16px; border-radius:8px; background:var(--line); overflow:hidden; border:2px solid var(--ink)}
+.g-alg .hp-bar div{height:100%; background:var(--bad); transition:width .4s}
+.g-alg .taunt{font-size:.9rem; font-style:italic; color:var(--muted); min-height:1.4em}
+.g-alg .golden{background:var(--hl); color:var(--hl-ink); font-family:var(--display); font-weight:800; padding:2px 12px; border-radius:999px; align-self:flex-start; border:2px solid var(--hl-ink)}
+.g-alg .stage.gold{border-color:var(--hl); box-shadow:0 0 0 4px var(--hl)}
+.g-alg .reveal{display:flex; align-items:center; gap:16px; flex-wrap:wrap}
+.g-alg .reveal .buddy{max-width:110px}
+@media (max-width:420px){.g-alg .shelf{grid-template-columns:repeat(3, minmax(0, 1fr))}}
+@media (prefers-reduced-motion: no-preference){.g-alg .reveal .buddy{animation:alg-hop .9s ease-out 2}
+@keyframes alg-hop{0%,100%{transform:translateY(0)} 40%{transform:translateY(-18px)}}}
+.g-alg #alg-confetti{position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:20}
+@media (max-width:420px){.g-alg .box{width:76px}
+.g-alg .opt{font-size:1.45rem}}
+@media (prefers-reduced-motion: no-preference){.g-alg .dot{animation:alg-pop .18s ease-out}
+@keyframes alg-pop{from{transform:scale(.3)} to{transform:scale(1)}}
+.g-alg .shake{animation:alg-shake .35s}
+@keyframes alg-shake{0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)}}
+.g-alg .float{animation:alg-floatUp 1s ease-out forwards}
+@keyframes alg-floatUp{from{opacity:1; transform:translateY(0)} to{opacity:0; transform:translateY(-50px)}}
+.g-alg .big-stars span{display:inline-block; animation:alg-starIn .5s both}
+.g-alg .big-stars span:nth-child(2){animation-delay:.15s}
+.g-alg .big-stars span:nth-child(3){animation-delay:.3s}
+@keyframes alg-starIn{from{transform:scale(0) rotate(-40deg)} to{transform:scale(1) rotate(0)}}}
+.g-fsb{
+  --paper:#F7F6FB; --grid:#E8E5F1; --card:#FFFFFF; --ink:#2A1F3D; --muted:#625A73; --line:#D5D0E2;
+  --berry:#A8326B; --berry-soft:#F6E0EA; --butter:#F2C043; --butter-soft:#FDF2D2; --mint:#2A7A6A; --mint-soft:#DCEFEA;
+  --hl:#FFE35A; --hl-ink:#2A1F3D; --good:#23804F; --good-soft:#DDF3E6; --bad:#B8323D; --bad-soft:#FBE3E5; --on-berry:#FFFFFF;
+  --display:"Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  --body:"Lexend", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .g-fsb{
+    --paper:#1C1626; --grid:#261F33; --card:#241C30; --ink:#F1ECF7; --muted:#B5AAC6; --line:#43385A;
+    --berry:#F07BAE; --berry-soft:#43223A; --butter:#F6CF5E; --butter-soft:#3A3122; --mint:#6CCFB8; --mint-soft:#1E3B35;
+    --hl:#F3D640; --hl-ink:#2A1F3D; --good:#62CF92; --good-soft:#1C3A2B; --bad:#F27E87; --bad-soft:#3E2326; --on-berry:#1C1626; color-scheme:dark;
+  }}
+:root[data-theme="dark"] .g-fsb{
+  --paper:#1C1626; --grid:#261F33; --card:#241C30; --ink:#F1ECF7; --muted:#B5AAC6; --line:#43385A;
+  --berry:#F07BAE; --berry-soft:#43223A; --butter:#F6CF5E; --butter-soft:#3A3122; --mint:#6CCFB8; --mint-soft:#1E3B35;
+  --hl:#F3D640; --hl-ink:#2A1F3D; --good:#62CF92; --good-soft:#1C3A2B; --bad:#F27E87; --bad-soft:#3E2326; --on-berry:#1C1626; color-scheme:dark;
+}
+.g-fsb *{box-sizing:border-box}
+.g-fsb{
+  background-color:var(--paper); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.55;
+  background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:26px 26px;
+}
+.g-fsb .page{max-width:760px; margin:0 auto; padding-block:16px 48px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:flex; flex-direction:column; gap:20px}
+.g-fsb h1,.g-fsb h2{font-family:var(--display); line-height:1.1; text-wrap:balance; margin:0}
+.g-fsb h1{font-size:clamp(2.3rem, 8vw, 3.6rem); font-weight:800}
+.g-fsb h2{font-size:1.6rem; font-weight:800}
+.g-fsb p{margin:0; max-width:62ch}
+.g-fsb .num{font-variant-numeric:tabular-nums}
+.g-fsb .muted{color:var(--muted)}
+.g-fsb .frac{display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle; line-height:1; font-variant-numeric:tabular-nums; margin:0 .08em; font-size:.88em}
+.g-fsb .frac span:first-child{padding:0 .15em .08em}
+.g-fsb .frac span:last-child{border-top:.09em solid currentColor; padding:.08em .15em 0}
+.g-fsb button{font:inherit; cursor:pointer; border-radius:12px; border:2px solid var(--ink); background:var(--card); color:var(--ink); padding:8px 16px; font-weight:600}
+.g-fsb button:hover:not(:disabled){background:var(--berry-soft)}
+.g-fsb button:focus-visible{outline:3px solid var(--mint); outline-offset:2px}
+.g-fsb button:disabled{cursor:not-allowed}
+.g-fsb .primary{background:var(--berry); border-color:var(--berry); color:var(--on-berry)}
+.g-fsb .primary:hover:not(:disabled){background:var(--berry); filter:brightness(1.08)}
+.g-fsb .big{font-family:var(--display); font-size:1.25rem; font-weight:800; padding:10px 22px}
+.g-fsb .small-btn{padding:4px 12px; font-size:.85rem}
+.g-fsb .top{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap}
+.g-fsb .brand{font-family:var(--display); font-weight:800; font-size:1.15rem}
+.g-fsb .top-right{display:flex; align-items:center; gap:10px}
+.g-fsb .coin{display:inline-block; width:.95em; height:.95em; border-radius:50%; background:var(--butter); box-shadow:inset 0 0 0 2px var(--berry); vertical-align:-.12em; margin-right:.3em}
+.g-fsb .coins{font-weight:600}
+.g-fsb .hero{display:flex; flex-direction:column; gap:12px}
+.g-fsb .lead{font-size:1.1rem; color:var(--muted)}
+.g-fsb .codebook{display:flex; flex-wrap:wrap; gap:10px}
+.g-fsb .code{font-family:var(--display); font-weight:800; font-size:1.25rem; border:2px dashed var(--berry); border-radius:10px; padding:6px 14px; background:var(--card)}
+.g-fsb .levels{display:grid; grid-template-columns:repeat(auto-fill, minmax(210px, 1fr)); gap:12px}
+.g-fsb .level{text-align:left; display:grid; grid-template-columns:auto 1fr; gap:2px 12px; align-items:center; padding:14px; border:2px solid var(--line); background:var(--card)}
+.g-fsb .level .lv-num{grid-row:span 3; width:48px; height:48px; border-radius:50%; background:var(--berry); color:var(--on-berry); font-family:var(--display); font-weight:800; font-size:1.6rem; display:grid; place-items:center}
+.g-fsb .level .lv-name{font-family:var(--display); font-weight:800; font-size:1.15rem; line-height:1.15}
+.g-fsb .level .lv-blurb{font-size:.82rem; color:var(--muted); font-weight:400; line-height:1.35}
+.g-fsb .stars{color:var(--berry); letter-spacing:.12em; font-size:1.05rem}
+.g-fsb .stars .off,.g-fsb .big-stars .off{color:var(--line)}
+.g-fsb .level:disabled{background:var(--paper); border-style:dashed}
+.g-fsb .level:disabled .lv-num{background:var(--line); color:var(--muted)}
+.g-fsb .level:disabled .lv-name{color:var(--muted)}
+.g-fsb .shelf{display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); gap:10px}
+.g-fsb .shelf-item{display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center; font-size:.8rem; font-weight:600; line-height:1.2}
+.g-fsb .shelf-item.locked{color:var(--muted); font-weight:400}
+.g-fsb .buddy{width:100%; max-width:72px; height:auto}
+.g-fsb .speed{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:14px; padding:18px; border:3px solid var(--mint); border-radius:14px; background:var(--mint-soft)}
+.g-fsb .speed h2{font-size:1.4rem}
+.g-fsb .label{font-size:.85rem; color:var(--muted)}
+.g-fsb .howto{font-size:.92rem; color:var(--muted); display:flex; flex-direction:column; gap:6px; border-top:2px dashed var(--line); padding-top:14px}
+.g-fsb .howto b{color:var(--ink)}
+.g-fsb .stage{background:var(--card); border:2px solid var(--line); border-radius:16px; padding:18px; display:flex; flex-direction:column; gap:14px; position:relative; overflow:hidden; min-width:0}
+.g-fsb .stage.gold{border-color:var(--hl); box-shadow:0 0 0 4px var(--hl)}
+.g-fsb .hud{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 14px}
+.g-fsb .hud-title{font-family:var(--display); font-weight:800; font-size:1.1rem}
+.g-fsb .hud-stats{display:flex; align-items:center; gap:14px; font-weight:600}
+.g-fsb .hearts{display:flex; gap:4px}
+.g-fsb .hearts svg{width:22px; height:22px}
+.g-fsb .hearts .full{fill:var(--bad)}
+.g-fsb .hearts .empty{fill:var(--line)}
+.g-fsb .streak{font-size:.85rem; padding:2px 10px; border-radius:999px; background:var(--paper); border:2px solid var(--line)}
+.g-fsb .streak.hot{background:var(--hl); color:var(--hl-ink); border-color:var(--hl-ink)}
+.g-fsb .track{display:flex; gap:6px}
+.g-fsb .track i{flex:1; height:10px; border-radius:5px; background:var(--line); display:block}
+.g-fsb .track i.ok{background:var(--good)}
+.g-fsb .track i.no{background:var(--bad)}
+.g-fsb .track i.now{background:var(--berry)}
+.g-fsb .timer{height:12px; border-radius:6px; background:var(--line); overflow:hidden}
+.g-fsb .timer div{height:100%; background:var(--mint); width:100%}
+.g-fsb .timer.low div{background:var(--bad)}
+.g-fsb .hp{display:flex; flex-direction:column; gap:4px}
+.g-fsb .hp-row{display:flex; align-items:center; gap:10px}
+.g-fsb .hp-row .buddy{max-width:48px; flex:none}
+.g-fsb .hp-bar{flex:1; height:16px; border-radius:8px; background:var(--line); overflow:hidden; border:2px solid var(--ink)}
+.g-fsb .hp-bar div{height:100%; background:var(--bad)}
+.g-fsb .taunt{font-size:.9rem; font-style:italic; color:var(--muted); min-height:1.4em}
+.g-fsb .story{font-size:.95rem; color:var(--muted); border:2px dashed var(--line); border-radius:10px; padding:8px 12px}
+.g-fsb .golden{background:var(--hl); color:var(--hl-ink); font-family:var(--display); font-weight:800; padding:2px 12px; border-radius:999px; align-self:flex-start; border:2px solid var(--hl-ink)}
+.g-fsb .prompt{font-size:1.15rem; font-weight:500}
+.g-fsb .eq{font-family:var(--display); font-weight:800; font-size:clamp(1.8rem, 7vw, 2.4rem); line-height:1.2}
+.g-fsb .visual{min-height:96px; display:flex; flex-direction:column; gap:10px; justify-content:center}
+.g-fsb .pile{display:flex; flex-wrap:wrap; gap:5px; padding:10px; border:2px dashed var(--butter); border-radius:10px; min-height:40px}
+.g-fsb .cookie{width:15px; height:15px; border-radius:50%; background:var(--butter); box-shadow:inset 0 0 0 2px var(--berry)}
+.g-fsb .plates{display:flex; flex-wrap:wrap; gap:10px}
+.g-fsb .plate{width:92px; min-height:92px; border-radius:50%; border:3px solid var(--mint); background:var(--mint-soft); display:grid; place-items:center; padding:10px}
+.g-fsb .plate .cookies{display:grid; grid-template-columns:repeat(4, 15px); gap:4px; justify-content:center; align-content:center}
+.g-fsb .plate .q{font-family:var(--display); font-size:2rem; font-weight:800; color:var(--mint); grid-column:1/-1}
+.g-fsb .groups{display:flex; flex-wrap:wrap; gap:8px}
+.g-fsb .group{border:3px solid var(--line); border-radius:12px; padding:6px; display:flex; flex-direction:column; align-items:center; gap:4px; background:var(--paper)}
+.g-fsb .group .cookies{display:grid; grid-template-columns:repeat(3, 15px); gap:4px}
+.g-fsb .group .tag{font-size:.8rem; font-weight:600; color:var(--muted)}
+.g-fsb .group.picked{border-color:var(--berry); background:var(--berry-soft)}
+.g-fsb .group.picked .tag{color:var(--ink)}
+.g-fsb .pies{display:flex; flex-wrap:wrap; gap:10px}
+.g-fsb .pie{width:70px; height:70px}
+.g-fsb .bars{display:flex; flex-direction:column; gap:8px}
+.g-fsb .bar-row{display:flex; align-items:center; gap:10px}
+.g-fsb .bar-row .bl{font-family:var(--display); font-weight:800; font-size:1.3rem; min-width:2.2em; text-align:right}
+.g-fsb .fbar{display:flex; flex:1; max-width:380px; height:32px; border:2px solid var(--ink); border-radius:6px; overflow:hidden}
+.g-fsb .fbar span{flex:1; background:var(--butter-soft); border-right:2px solid var(--ink)}
+.g-fsb .fbar span:last-child{border-right:0}
+.g-fsb .fbar span.on{background:var(--berry)}
+.g-fsb .opts{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px}
+.g-fsb .opt{font-family:var(--display); font-size:1.7rem; font-weight:800; padding:12px 10px; position:relative; min-height:84px}
+.g-fsb .opt .key{position:absolute; top:6px; left:10px; font-family:var(--body); font-size:.7rem; font-weight:500; color:var(--muted)}
+.g-fsb .opt.right{background:var(--good-soft); border-color:var(--good)}
+.g-fsb .opt.wrong{background:var(--bad-soft); border-color:var(--bad)}
+.g-fsb .opt:disabled:not(.right):not(.wrong){opacity:.5}
+.g-fsb .feedback{padding:12px 14px; border-radius:12px; display:flex; flex-direction:column; gap:8px}
+.g-fsb .feedback.good{background:var(--good-soft)}
+.g-fsb .feedback.bad{background:var(--bad-soft)}
+.g-fsb .feedback b{font-family:var(--display); font-size:1.25rem}
+.g-fsb .feedback .row{display:flex; justify-content:flex-end}
+.g-fsb .float{position:absolute; font-family:var(--display); font-weight:800; font-size:1.6rem; color:var(--berry); pointer-events:none; right:24px; top:60px}
+.g-fsb .end{align-items:flex-start}
+.g-fsb .end-title{font-size:clamp(2rem, 8vw, 3rem)}
+.g-fsb .big-stars{font-size:3rem; color:var(--berry); letter-spacing:.1em; line-height:1}
+.g-fsb .big-score{font-family:var(--display); font-size:3.6rem; font-weight:800; line-height:1}
+.g-fsb .btn-row{display:flex; flex-wrap:wrap; gap:10px}
+.g-fsb .reveal{display:flex; align-items:center; gap:16px; flex-wrap:wrap}
+.g-fsb .reveal .buddy{max-width:110px}
+.g-fsb #fsb-confetti{position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:20}
+@media (max-width:420px){.g-fsb .shelf{grid-template-columns:repeat(3, minmax(0, 1fr))}
+.g-fsb .plate{width:80px; min-height:80px}
+.g-fsb .pie{width:58px; height:58px}
+.g-fsb .opt{font-size:1.45rem}}
+@media (prefers-reduced-motion: no-preference){.g-fsb .cookie{animation:fsb-pop .18s ease-out}
+@keyframes fsb-pop{from{transform:scale(.3)} to{transform:scale(1)}}
+.g-fsb .shake{animation:fsb-shake .35s}
+@keyframes fsb-shake{0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)}}
+.g-fsb .float{animation:fsb-floatUp 1s ease-out forwards}
+@keyframes fsb-floatUp{from{opacity:1; transform:translateY(0)} to{opacity:0; transform:translateY(-50px)}}
+.g-fsb .big-stars span{display:inline-block; animation:fsb-starIn .5s both}
+.g-fsb .big-stars span:nth-child(2){animation-delay:.15s}
+.g-fsb .big-stars span:nth-child(3){animation-delay:.3s}
+@keyframes fsb-starIn{from{transform:scale(0) rotate(-40deg)} to{transform:scale(1) rotate(0)}}
+.g-fsb .reveal .buddy{animation:fsb-hop .9s ease-out 2}
+@keyframes fsb-hop{0%,100%{transform:translateY(0)} 40%{transform:translateY(-18px)}}}
+.g-nb{
+  --bg:#F2F5FA; --card:#FFFFFF; --ink:#13213D; --muted:#55627C; --line:#D2DAE6;
+  --flame:#D9481A; --flame-soft:#FDE6DC; --volt:#1F5FD1; --volt-soft:#E0EAFB; --hl:#FFD43B; --hl-ink:#13213D;
+  --good:#1F7F4C; --good-soft:#DCF2E5; --bad:#B8323D; --bad-soft:#FBE3E5; --on-flame:#FFFFFF;
+  --display:"Bricolage Grotesque", "Arial Black", system-ui, sans-serif;
+  --body:"Lexend", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .g-nb{
+    --bg:#0F1626; --card:#172036; --ink:#EEF2FA; --muted:#A3AFC6; --line:#2E3A58;
+    --flame:#FF7A45; --flame-soft:#3A2018; --volt:#7DA8FF; --volt-soft:#1D2C4D; --hl:#FFD43B; --hl-ink:#13213D;
+    --good:#5FD08F; --good-soft:#173527; --bad:#F27E87; --bad-soft:#3E2326; --on-flame:#0F1626; color-scheme:dark;
+  }}
+:root[data-theme="dark"] .g-nb{
+  --bg:#0F1626; --card:#172036; --ink:#EEF2FA; --muted:#A3AFC6; --line:#2E3A58;
+  --flame:#FF7A45; --flame-soft:#3A2018; --volt:#7DA8FF; --volt-soft:#1D2C4D; --hl:#FFD43B; --hl-ink:#13213D;
+  --good:#5FD08F; --good-soft:#173527; --bad:#F27E87; --bad-soft:#3E2326; --on-flame:#0F1626; color-scheme:dark;
+}
+.g-nb *{box-sizing:border-box}
+.g-nb{background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.5}
+.g-nb .page{max-width:640px; margin:0 auto; padding-block:16px 40px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:flex; flex-direction:column; gap:18px}
+.g-nb h1,.g-nb h2{font-family:var(--display); line-height:1; margin:0; text-wrap:balance}
+.g-nb h1{font-size:clamp(2.6rem, 11vw, 4.2rem); font-weight:800; letter-spacing:-.02em}
+.g-nb h1 span{color:var(--flame)}
+.g-nb h2{font-size:1.15rem; font-weight:800}
+.g-nb p{margin:0; max-width:60ch}
+.g-nb .num{font-variant-numeric:tabular-nums}
+.g-nb .muted{color:var(--muted)}
+.g-nb .label{font-size:.78rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.g-nb button{font:inherit; cursor:pointer; border-radius:12px; border:2px solid var(--line); background:var(--card); color:var(--ink); padding:8px 14px; font-weight:600}
+.g-nb button:hover:not(:disabled){border-color:var(--ink)}
+.g-nb button:focus-visible,.g-nb input:focus-visible{outline:3px solid var(--volt); outline-offset:2px}
+.g-nb .go{background:var(--flame); border-color:var(--flame); color:var(--on-flame); font-family:var(--display); font-weight:800; font-size:1.5rem; padding:14px 20px; width:100%}
+.g-nb .go:hover:not(:disabled){border-color:var(--flame); filter:brightness(1.07)}
+.g-nb .ghost{background:transparent}
+.g-nb .block{display:flex; flex-direction:column; gap:8px}
+.g-nb .chips{display:flex; flex-wrap:wrap; gap:8px}
+.g-nb .chip{display:flex; flex-direction:column; align-items:flex-start; gap:0; padding:8px 12px; text-align:left; line-height:1.25}
+.g-nb .chip small{font-weight:400; font-size:.78rem; color:var(--muted)}
+.g-nb .chip[aria-pressed="true"]{background:var(--volt-soft); border-color:var(--volt)}
+.g-nb .chip[aria-pressed="true"] small{color:var(--ink)}
+.g-nb .modes{display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px}
+.g-nb .mode{text-align:left; display:flex; flex-direction:column; gap:2px; padding:12px}
+.g-nb .mode b{font-family:var(--display); font-size:1.15rem; font-weight:800}
+.g-nb .mode small{font-weight:400; font-size:.8rem; color:var(--muted); line-height:1.3}
+.g-nb .mode[aria-pressed="true"]{background:var(--flame-soft); border-color:var(--flame)}
+.g-nb .mode[aria-pressed="true"] small{color:var(--ink)}
+@media (max-width:480px){.g-nb .modes{grid-template-columns:1fr}}
+.g-nb .name-row{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.g-nb .name-row input{font:inherit; font-weight:600; padding:8px 12px; border-radius:12px; border:2px solid var(--line); background:var(--card); color:var(--ink); flex:1; min-width:0; max-width:280px}
+.g-nb .board{border:2px solid var(--line); border-radius:14px; background:var(--card); padding:14px; display:flex; flex-direction:column; gap:10px}
+.g-nb .board-head{display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap}
+.g-nb .board table{width:100%; border-collapse:collapse; font-size:.92rem}
+.g-nb .board td,.g-nb .board th{padding:6px 4px; text-align:left; border-top:1px solid var(--line)}
+.g-nb .board th{font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); font-weight:600; border-top:0}
+.g-nb .board td.r,.g-nb .board th.r{text-align:right}
+.g-nb .board select{font:inherit; font-size:.85rem; padding:4px 8px; border-radius:8px; border:2px solid var(--line); background:var(--card); color:var(--ink)}
+.g-nb .play{display:flex; flex-direction:column; gap:14px}
+.g-nb .hud{display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px}
+.g-nb .stat{background:var(--card); border:2px solid var(--line); border-radius:12px; padding:8px 10px; display:flex; flex-direction:column}
+.g-nb .stat b{font-family:var(--display); font-size:1.7rem; font-weight:800; line-height:1.05; font-variant-numeric:tabular-nums}
+.g-nb .stat.hot{background:var(--hl); border-color:var(--hl-ink); color:var(--hl-ink)}
+.g-nb .stat.hot .label{color:var(--hl-ink)}
+.g-nb .timebar{height:10px; border-radius:5px; background:var(--line); overflow:hidden}
+.g-nb .timebar div{height:100%; width:100%; background:var(--flame)}
+.g-nb .timebar.low div{background:var(--bad)}
+.g-nb .arena{background:var(--card); border:2px solid var(--line); border-radius:18px; padding:18px 14px; display:flex; flex-direction:column; align-items:center; gap:12px; position:relative; overflow:hidden; transition:background .15s, border-color .15s}
+.g-nb .arena.ok{background:var(--good-soft); border-color:var(--good)}
+.g-nb .arena.no{background:var(--bad-soft); border-color:var(--bad)}
+.g-nb .problem{font-family:var(--display); font-weight:800; font-size:clamp(2.8rem, 15vw, 5rem); line-height:1; font-variant-numeric:tabular-nums; letter-spacing:-.01em; white-space:nowrap}
+.g-nb .problem .gap{display:inline-block; min-width:1.2em; border-bottom:.08em solid var(--flame); color:var(--flame); text-align:center}
+.g-nb .answer{font-family:var(--display); font-weight:800; font-size:clamp(2.2rem, 11vw, 3.4rem); min-width:4ch; min-height:1.25em; text-align:center; border-bottom:4px solid var(--ink); font-variant-numeric:tabular-nums; line-height:1.2}
+.g-nb .answer.empty{color:var(--line)}
+.g-nb .flash{min-height:1.5em; font-weight:600; text-align:center}
+.g-nb .flash.good{color:var(--good)}
+.g-nb .flash.bad{color:var(--bad)}
+.g-nb .combo{position:absolute; top:10px; right:14px; font-family:var(--display); font-weight:800; color:var(--flame); font-size:1.2rem}
+.g-nb .pad{display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px}
+.g-nb .pad button{font-family:var(--display); font-weight:800; font-size:1.8rem; min-height:60px; padding:6px}
+.g-nb .pad .fn{font-family:var(--body); font-size:1rem; font-weight:600; color:var(--muted)}
+.g-nb .pad .enter{background:var(--volt); border-color:var(--volt); color:var(--on-flame)}
+.g-nb .play-foot{display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap}
+.g-nb .results{display:flex; flex-direction:column; gap:16px}
+.g-nb .big{font-family:var(--display); font-size:clamp(3rem, 14vw, 4.6rem); font-weight:800; line-height:1}
+.g-nb .res-grid{display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:8px}
+@media (max-width:480px){.g-nb .res-grid{grid-template-columns:repeat(2, minmax(0, 1fr))}}
+.g-nb .missed{display:flex; flex-direction:column; gap:6px; border:2px solid var(--line); border-radius:14px; background:var(--card); padding:14px}
+.g-nb .miss{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; padding:6px 0; border-top:1px solid var(--line); font-variant-numeric:tabular-nums}
+.g-nb .miss:first-of-type{border-top:0}
+.g-nb .miss .eq{font-family:var(--display); font-weight:800; font-size:1.15rem}
+.g-nb .miss .you{color:var(--bad); font-size:.9rem}
+.g-nb .miss .tip{flex-basis:100%; font-size:.85rem; color:var(--muted)}
+.g-nb .record{background:var(--hl); color:var(--hl-ink); font-family:var(--display); font-weight:800; padding:4px 12px; border-radius:999px; align-self:flex-start}
+.g-nb .btn-row{display:flex; gap:10px; flex-wrap:wrap}
+.g-nb .btn-row .go{width:auto}
+@media (prefers-reduced-motion: no-preference){.g-nb .pop{animation:nb-pop .2s ease-out}
+@keyframes nb-pop{from{transform:scale(.85)} to{transform:scale(1)}}}
+.credit{text-align:center; font-size:.85rem; color:var(--muted); padding:8px 16px 28px}
+.credit b{color:var(--ink); font-weight:600}
+</style>
+<script>document.body.className = 'g-hub';</script>
+
+<nav class="appbar" id="appbar" hidden><a href="#" id="back">← All games</a><span>Mystery Math Arcade</span></nav>
+
+<div id="hub" class="hub">
+  <header class="hub-head">
+    <h1>Mystery Math Arcade</h1>
+    <p>Three math games in one place. Pick a game, beat the levels, and come back to keep your stars and high scores.</p>
+  </header>
+  <div class="hub-games">
+    <article class="hub-card">
+      <div class="hub-band alg" aria-hidden="true">3n</div>
+      <div class="hub-body">
+        <span class="hub-skill">Algebra · multiplication</span>
+        <h2>Mystery Box Algebra</h2>
+        <p>Rescue the Box Buddies by cracking boxes like 4<i>n</i> = 28, then beat the Box Keeper.</p>
+        <span class="hub-prog" id="prog-alg"></span>
+        <a class="hub-play alg" href="#algebra">Play</a>
+      </div>
+    </article>
+    <article class="hub-card">
+      <div class="hub-band fsb" aria-hidden="true"><span class="frac"><span>3</span><span>4</span></span></div>
+      <div class="hub-body">
+        <span class="hub-skill">Division · fractions</span>
+        <h2>Fair Share Bakery</h2>
+        <p>Share cookies, pizza and cupcakes fairly, then teach the Crumb Monster to share.</p>
+        <span class="hub-prog" id="prog-fsb"></span>
+        <a class="hub-play fsb" href="#fractions">Play</a>
+      </div>
+    </article>
+    <article class="hub-card">
+      <div class="hub-band nb" aria-hidden="true">+ −</div>
+      <div class="hub-body">
+        <span class="hub-skill">Addition · subtraction</span>
+        <h2>Number Blitz</h2>
+        <p>Rapid-fire questions across six levels, with a 60-second Blitz, the 50 Club and Practice.</p>
+        <span class="hub-prog" id="prog-nb"></span>
+        <a class="hub-play nb" href="#blitz">Play</a>
+      </div>
+    </article>
+  </div>
+  <div class="hub-note">
+    <p><b>Progress:</b> Stars, coins and high scores save in this browser, so each device keeps its own progress.</p>
+    <p><b>Tutor tip:</b> Send students straight to one game with a link that ends in #algebra, #fractions or #blitz.</p>
+  </div>
+</div>
+
+<div id="alg-app" class="game-app" hidden><div class="page">
+  <header class="top">
+    <span class="brand" id="alg-brand">Mystery Box Algebra</span>
+    <div class="top-right">
+      <span class="coins num" id="alg-coin-total"><span class="coin"></span>0</span>
+      <button class="small-btn" id="alg-sound" aria-pressed="true">Sound: on</button>
+    </div>
+  </header>
+
+  <section id="alg-home" style="display:flex;flex-direction:column;gap:22px">
+    <div class="hero">
+      <h1>Crack the mystery boxes</h1>
+      <p class="lead">The sneaky Box Keeper has locked four Box Buddies inside mystery boxes. Each lock only opens with the right number. Rescue them all, then face the Box Keeper in the final level.</p>
+      <div class="codebook" aria-label="Code book">
+        <span class="code">3<span class="v">n</span> = 3 × <span class="v">n</span></span>
+        <span class="code"><span class="v">a</span><span class="v">b</span> = <span class="v">a</span> × <span class="v">b</span></span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <h2>Levels</h2>
+      <div class="levels" id="alg-levels"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <h2>Box Buddies rescued</h2>
+      <div class="shelf" id="alg-shelf"></div>
+    </div>
+    <div class="speed">
+      <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
+        <h2>Speed Round</h2>
+        <p>60 seconds. Right answers score a point, and golden boxes are worth 3. Wrong answers cost 3 seconds.</p>
+        <p class="label" id="alg-speed-best"></p>
+      </div>
+      <button class="primary big" id="alg-speed-start">Play Speed Round</button>
+    </div>
+    <div class="howto">
+      <p><b>How to play:</b> Tap an answer or press keys 1–4. Each level has 6 boxes and 3 hearts. Three right answers in a row doubles your coins, and five in a row triples them.</p>
+      <p><b>Stars:</b> No mistakes earns 3 stars, one mistake earns 2, and two mistakes earns 1. Earn a star to unlock the next level.</p>
+      <p><b>Teacher tip:</b> Project the Speed Round and let teams take turns calling out answers.</p>
+    </div>
+  </section>
+
+  <section id="alg-play" class="stage" hidden>
+    <div class="hud">
+      <button class="small-btn" id="alg-quit">← Levels</button>
+      <span class="hud-title" id="alg-hud-title"></span>
+      <div class="hud-stats">
+        <span class="hearts" id="alg-hearts" aria-label="Hearts"></span>
+        <span class="streak" id="alg-streak">Streak 0</span>
+        <span class="num" id="alg-hud-score"></span>
+      </div>
+    </div>
+    <div id="alg-meter"></div>
+    <p class="story" id="alg-story"></p>
+    <span class="golden" id="alg-golden" hidden>Golden box: 3 points</span>
+    <p class="prompt" id="alg-prompt"></p>
+    <div class="visual" id="alg-visual"></div>
+    <div class="opts" id="alg-opts"></div>
+    <div id="alg-feedback" aria-live="polite"></div>
+  </section>
+
+  <section id="alg-end" class="stage end" hidden></section>
+</div>
+<canvas id="alg-confetti" aria-hidden="true"></canvas></div>
+<div id="fsb-app" class="game-app" hidden><div class="page">
+  <header class="top">
+    <span class="brand">Fair Share Bakery</span>
+    <div class="top-right">
+      <span class="coins num" id="fsb-coin-total"><span class="coin"></span>0</span>
+      <button class="small-btn" id="fsb-sound" aria-pressed="true">Sound: on</button>
+    </div>
+  </header>
+
+  <section id="fsb-home" style="display:flex;flex-direction:column;gap:22px">
+    <div class="hero">
+      <h1>Every share has to be fair</h1>
+      <p class="lead">The Crumb Monster keeps grabbing more than his share. Help four hungry customers get equal portions of cookies, pizza and cupcakes. Then teach the Crumb Monster how to share.</p>
+      <div class="codebook" aria-label="Code book">
+        <span class="code">3 ÷ 4 = <span class="frac"><span>3</span><span>4</span></span></span>
+        <span class="code"><span class="frac"><span>2</span><span>3</span></span> of 12 = 8</span>
+        <span class="code"><span class="frac"><span>1</span><span>2</span></span> = <span class="frac"><span>2</span><span>4</span></span></span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <h2>Levels</h2>
+      <div class="levels" id="fsb-levels"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <h2>Customers served</h2>
+      <div class="shelf" id="fsb-shelf"></div>
+    </div>
+    <div class="speed">
+      <div style="display:flex;flex-direction:column;gap:4px;min-width:0">
+        <h2>Speed Round</h2>
+        <p>60 seconds. Right answers score a point, and golden orders are worth 3. Wrong answers cost 3 seconds.</p>
+        <p class="label" id="fsb-speed-best"></p>
+      </div>
+      <button class="primary big" id="fsb-speed-start">Play Speed Round</button>
+    </div>
+    <div class="howto">
+      <p><b>How to play:</b> Tap an answer or press keys 1–4. Each level has 6 orders and 3 hearts. Three right answers in a row doubles your coins, and five in a row triples them.</p>
+      <p><b>Stars:</b> No mistakes earns 3 stars, one mistake earns 2, and two mistakes earns 1. Earn a star to unlock the next level.</p>
+      <p><b>Teacher tip:</b> Level 2 shows that a fraction is a division, like 3 ÷ 4 = <span class="frac"><span>3</span><span>4</span></span>. Pause there and ask students to explain the pizza picture.</p>
+    </div>
+  </section>
+
+  <section id="fsb-play" class="stage" hidden>
+    <div class="hud">
+      <button class="small-btn" id="fsb-quit">← Levels</button>
+      <span class="hud-title" id="fsb-hud-title"></span>
+      <div class="hud-stats">
+        <span class="hearts" id="fsb-hearts" aria-label="Hearts"></span>
+        <span class="streak" id="fsb-streak">Streak 0</span>
+        <span class="num" id="fsb-hud-score"></span>
+      </div>
+    </div>
+    <div id="fsb-meter"></div>
+    <p class="story" id="fsb-story"></p>
+    <span class="golden" id="fsb-golden" hidden>Golden order: 3 points</span>
+    <p class="prompt" id="fsb-prompt"></p>
+    <div class="eq" id="fsb-eq"></div>
+    <div class="visual" id="fsb-visual"></div>
+    <div class="opts" id="fsb-opts"></div>
+    <div id="fsb-feedback" aria-live="polite"></div>
+  </section>
+
+  <section id="fsb-end" class="stage end" hidden></section>
+</div>
+<canvas id="fsb-confetti" aria-hidden="true"></canvas></div>
+<div id="nb-app" class="game-app" hidden><div class="page">
+  <section id="nb-setup" style="display:flex;flex-direction:column;gap:18px">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <h1>Number <span>Blitz</span></h1>
+      <p class="muted">Rapid-fire addition and subtraction. Every round makes brand-new questions, so you never run out.</p>
+    </div>
+
+    <div class="block">
+      <label class="label" for="nb-player">Player name</label>
+      <div class="name-row"><input id="nb-player" maxlength="16" autocomplete="off" placeholder="Type your name"></div>
+    </div>
+
+    <div class="block">
+      <span class="label" id="nb-lvl-lab">Level</span>
+      <div class="chips" id="nb-levels" role="group" aria-labelledby="nb-lvl-lab"></div>
+    </div>
+
+    <div class="block">
+      <span class="label" id="nb-op-lab">Questions</span>
+      <div class="chips" id="nb-ops" role="group" aria-labelledby="nb-op-lab"></div>
+    </div>
+
+    <div class="block">
+      <span class="label" id="nb-mode-lab">Mode</span>
+      <div class="modes" id="nb-modes" role="group" aria-labelledby="nb-mode-lab"></div>
+    </div>
+
+    <button class="go" id="nb-start">Start</button>
+
+    <div class="board">
+      <div class="board-head">
+        <h2>Top scores on this device</h2>
+        <label class="label" style="display:flex;gap:6px;align-items:center">Show <select id="nb-board-mode"></select></label>
+      </div>
+      <div id="nb-board"></div>
+    </div>
+    <p class="muted" style="font-size:.88rem"><b style="color:var(--ink)">Tutor tip:</b> Each student types their name before playing, so the board shows who is improving. Use the "Practice" mode for students who need more time. It has no timer and shows a strategy after every miss.</p>
+  </section>
+
+  <section id="nb-play" class="play" hidden>
+    <div class="hud">
+      <div class="stat"><span class="label" id="nb-h1-lab">Time</span><b id="nb-h1">60</b></div>
+      <div class="stat"><span class="label">Score</span><b id="nb-h2">0</b></div>
+      <div class="stat" id="nb-streak-box"><span class="label">Streak</span><b id="nb-h3">0</b></div>
+    </div>
+    <div class="timebar" id="nb-timebar"><div></div></div>
+    <div class="arena" id="nb-arena">
+      <span class="combo" id="nb-combo"></span>
+      <div class="problem" id="nb-problem" aria-live="polite"></div>
+      <div class="answer empty" id="nb-answer">?</div>
+      <div class="flash" id="nb-flash" aria-live="polite"></div>
+    </div>
+    <div class="pad" id="nb-pad"></div>
+    <div class="play-foot">
+      <button class="ghost" id="nb-quit">Quit round</button>
+      <span class="muted" style="font-size:.85rem;align-self:center">Keyboard works too: type the number, Enter to check.</span>
+    </div>
+  </section>
+
+  <section id="nb-results" class="results" hidden></section>
+</div></div>
+
+<footer class="credit">Created by <b>Simoruja</b></footer>
+
+<script>
+(function(){
+  const $ = id => document.getElementById('alg-' + id);
+  const V = l => `<span class="v">${l}</span>`;
+  const rand = (lo, hi) => lo + Math.floor(Math.random() * (hi - lo + 1));
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+  const shuffle = arr => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const dots = k => Array.from({length:k}, () => '<span class="dot"></span>').join('');
+  const LETTERS = ['n', 'x', 'y', 'k', 'm', 'p', 't'];
+  const PER_LEVEL = 6;
+
+  const LEVELS = [
+    {name:'Count the Boxes', blurb:'You know what is inside. Find the total.', type:'eval', buddy:'Pip', story:'Pip is trapped in the bakery boxes. Count the counters to set Pip free.'},
+    {name:'Crack the Box', blurb:'Find the mystery number inside each box.', type:'solve', buddy:'Mo', story:'Mo is stuck in the toy shop. Work out what is inside each locked box.'},
+    {name:'Secret Code', blurb:'Match the words to the algebra.', type:'meaning', buddy:'Zig', story:'The Box Keeper wrote the library locks in algebra code. Crack the code to free Zig.'},
+    {name:'Letter Pairs', blurb:'Two letters side by side multiply.', type:'two', buddy:'Lulu', story:'Lulu is behind a double lock. Each lock has two letters, so multiply them both.'},
+    {name:'Boss Box', blurb:'Face the Box Keeper with bigger numbers.', type:'mix', buddy:'The Box Keeper', story:'The Box Keeper is here! Every right answer knocks off one point of armor.'}
+  ];
+
+  function buddySVG(i, unlocked){
+    const fills = ['--unit', '--box', '--good', '--bad', '--hl'];
+    const f = unlocked ? `var(${fills[i]})` : 'var(--line)';
+    const bodies = [
+      `<circle cx="40" cy="46" r="28" style="fill:${f}"/>`,
+      `<rect x="13" y="18" width="54" height="56" rx="16" style="fill:${f}"/><rect x="22" y="8" width="8" height="14" rx="4" style="fill:${f}"/><rect x="50" y="8" width="8" height="14" rx="4" style="fill:${f}"/>`,
+      `<path d="M40 10 L70 70 Q72 74 66 74 L14 74 Q8 74 10 70 Z" style="fill:${f}"/>`,
+      `<ellipse cx="40" cy="48" rx="30" ry="25" style="fill:${f}"/><circle cx="18" cy="24" r="9" style="fill:${f}"/><circle cx="62" cy="24" r="9" style="fill:${f}"/>`,
+      `<rect x="12" y="26" width="56" height="48" rx="6" style="fill:${f}"/><path d="M12 26 L40 14 L68 26 Z" style="fill:${f};opacity:.75"/><path d="M26 12 L31 2 L40 9 L49 2 L54 12 Z" style="fill:${unlocked ? 'var(--unit)' : 'var(--line)'}"/>`
+    ];
+    const face = unlocked
+      ? `<circle cx="31" cy="46" r="6" fill="#fff"/><circle cx="49" cy="46" r="6" fill="#fff"/><circle cx="32" cy="47" r="3" fill="#1C2942"/><circle cx="50" cy="47" r="3" fill="#1C2942"/><path d="M32 58 Q40 65 48 58" stroke="#1C2942" stroke-width="3" fill="none" stroke-linecap="round"/>`
+      : `<text x="40" y="58" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="30" style="fill:var(--muted)">?</text>`;
+    return `<svg viewBox="0 0 80 80" class="buddy" aria-hidden="true">${bodies[i]}${face}</svg>`;
+  }
+
+  const KEY = 'mba-game-v1';
+  let save = {stars:[0,0,0,0,0], coins:0, speedBest:0, sound:true};
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && Array.isArray(s.stars)) save = Object.assign(save, s); } catch (e) {}
+  function persist(){ try { localStorage.setItem(KEY, JSON.stringify(save)); } catch (e) {} }
+
+  let actx = null;
+  function tone(freqs, type){
+    if (!save.sound) return;
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      const t0 = actx.currentTime;
+      freqs.forEach((f, i) => {
+        const o = actx.createOscillator(), g = actx.createGain();
+        o.type = type || 'triangle'; o.frequency.value = f;
+        const t = t0 + i * 0.09;
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.18, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
+        o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + 0.18);
+      });
+    } catch (e) {}
+  }
+  const sfx = {
+    right: () => tone([660, 880]),
+    wrong: () => tone([220, 165], 'sawtooth'),
+    win: () => tone([523, 659, 784, 1047]),
+    lose: () => tone([392, 330, 262], 'square')
+  };
+  function renderSound(){ $('sound').setAttribute('aria-pressed', String(save.sound)); $('sound').textContent = 'Sound: ' + (save.sound ? 'on' : 'off'); }
+  $('sound').onclick = () => { save.sound = !save.sound; persist(); renderSound(); };
+
+  function confetti(){
+    if (reduced) return;
+    const c = $('confetti'), ctx = c.getContext('2d'); if (!ctx) return;
+    const W = c.width = innerWidth, H = c.height = innerHeight;
+    const cs = getComputedStyle(document.documentElement);
+    const cols = ['--unit', '--box', '--hl', '--good'].map(k => cs.getPropertyValue(k).trim());
+    const parts = Array.from({length:120}, () => ({x:W/2 + (Math.random()-.5)*W*.3, y:H*.35, vx:(Math.random()-.5)*12, vy:-Math.random()*12-4, r:Math.random()*6+4, c:pick(cols), a:Math.random()*6}));
+    let f = 0;
+    (function step(){
+      ctx.clearRect(0, 0, W, H);
+      parts.forEach(p => { p.vy += 0.35; p.x += p.vx; p.y += p.vy; p.a += 0.2; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a); ctx.fillStyle = p.c; ctx.fillRect(-p.r/2, -p.r/3, p.r, p.r*.66); ctx.restore(); });
+      if (++f < 110) requestAnimationFrame(step); else ctx.clearRect(0, 0, W, H);
+    })();
+  }
+
+  function numOpts(ans, cands){
+    const out = [];
+    shuffle(cands).forEach(v => { v = Math.round(v); if (v > 0 && v !== ans && !out.includes(v) && out.length < 3) out.push(v); });
+    let k = 1; while (out.length < 3) { const v = ans + k * (k % 2 ? 1 : -1) * 2; if (v > 0 && v !== ans && !out.includes(v)) out.push(v); k++; }
+    return shuffle([ans, ...out]).map(v => ({html:String(v), right:v === ans}));
+  }
+  function boxesHTML(a, inside, tag){
+    return `<div class="boxes">${Array.from({length:a}, () => `<div class="box"><span class="box-tag">${tag}</span><div class="dots">${inside === null ? '<span class="q">?</span>' : dots(inside)}</div></div>`).join('')}</div>`;
+  }
+  function genEval(hard){
+    const l = pick(LETTERS), a = hard ? rand(3, 9) : rand(2, 6), n = hard ? rand(4, 12) : rand(2, 9), ans = a * n;
+    const visual = n <= 9 && a <= 6
+      ? `<span class="label">${a} boxes with ${n} in each</span>` + boxesHTML(a, n, `${l} = ${n}`)
+      : `<div class="tiles"><span class="tile">${V(l)} = ${n}</span></div>`;
+    return {prompt:`If ${V(l)} = ${n}, what is ${a}${V(l)}?`, visual, options:numOpts(ans, [a + n, ans + a, ans - a, ans + 1, ans - 1, ans + 10, a * n + n]),
+      why:`${a}${V(l)} means ${a} × ${V(l)}, so ${a} × ${n} = ${ans}.`, short:`${a} × ${n} = ${ans}`};
+  }
+  function genSolve(hard){
+    const l = pick(LETTERS), a = hard ? rand(3, 9) : rand(2, 6), n = hard ? rand(4, 12) : rand(2, 9), b = a * n;
+    const drawn = b <= 54;
+    const visual = drawn
+      ? `<span class="label">${b} counters shared equally into ${a} boxes</span><div class="pile" id="alg-pile">${dots(b)}</div>` + boxesHTML(a, null, l)
+      : `<span class="label">${b} counters shared equally into ${a} boxes</span>` + boxesHTML(a, null, l);
+    return {prompt:`${a}${V(l)} = ${b}. What is ${V(l)}?`, visual, options:numOpts(n, [b - a, n + 1, n - 1, a, n + 2, b / a + a, n * 2]),
+      why:`${a} × ${n} = ${b}, so ${V(l)} = ${n}. You can also divide: ${b} ÷ ${a} = ${n}.`, short:`${a} × ${n} = ${b}`,
+      onRight: drawn ? () => shareOut(a, n) : () => fillTags(n)};
+  }
+  function genMeaning(){
+    const l = pick(LETTERS), c = rand(2, 9);
+    if (Math.random() < 0.5) {
+      const phrase = pick([`${c} groups of ${V(l)}`, `${c} times ${V(l)}`, `${V(l)} multiplied by ${c}`]);
+      const opts = shuffle([{html:`${c}${V(l)}`, right:true}, {html:`${c} + ${V(l)}`}, {html:`${V(l)} − ${c}`}, {html:`${c} ÷ ${V(l)}`}]);
+      return {prompt:'Which one means this?', visual:`<div class="codecard">${phrase}</div>`, options:opts,
+        why:`A number written right next to a letter means multiply, so ${phrase} is ${c}${V(l)}.`, short:`${c}${V(l)} means ${c} × ${V(l)}`};
+    }
+    const opts = shuffle([{html:`${c} × ${V(l)}`, right:true}, {html:`${c} + ${V(l)}`}, {html:`${V(l)} − ${c}`}, {html:`${c} ÷ ${V(l)}`}]);
+    return {prompt:'What does this mean?', visual:`<div class="codecard">${c}${V(l)}</div>`, options:opts,
+      why:`When a number sits next to a letter, they multiply. ${c}${V(l)} means ${c} × ${V(l)}.`, short:`${c}${V(l)} = ${c} × ${V(l)}`};
+  }
+  function genTwo(hard){
+    const p = hard ? rand(2, 9) : rand(2, 6), q = hard ? rand(2, 9) : rand(2, 6), c = hard ? rand(2, 4) : pick([1, 1, 2, 3]);
+    const ans = c * p * q, expr = `${c === 1 ? '' : c}${V('a')}${V('b')}`;
+    return {prompt:`What is ${expr}?`, visual:`<div class="tiles"><span class="tile">${V('a')} = ${p}</span><span class="tile">${V('b')} = ${q}</span></div>`,
+      options:numOpts(ans, [p + q, c + p + q, ans + p, ans - q, c * p + q, p * q + c, c === 1 ? p * q * 2 : p * q]),
+      why:`${expr} means ${c === 1 ? '' : c + ' × '}${V('a')} × ${V('b')}. So ${c === 1 ? '' : c + ' × '}${p} × ${q} = ${ans}.`, short:`${c === 1 ? '' : c + ' × '}${p} × ${q} = ${ans}`};
+  }
+  function makeQ(type, hard){
+    if (type === 'mix') type = pick(['eval', 'solve', 'meaning', 'two']);
+    return type === 'eval' ? genEval(hard) : type === 'solve' ? genSolve(hard) : type === 'meaning' ? genMeaning() : genTwo(hard);
+  }
+
+  let animTimer = null;
+  function fillTags(n){ document.querySelectorAll('#alg-visual .box-tag').forEach(t => t.textContent += ' = ' + n); document.querySelectorAll('#alg-visual .q').forEach(q => q.textContent = n); }
+  function shareOut(a, n){
+    const targets = Array.from(document.querySelectorAll('#alg-visual .dots'));
+    targets.forEach(t => t.innerHTML = '');
+    const tags = () => document.querySelectorAll('#alg-visual .box-tag').forEach(t => t.textContent += ' = ' + n);
+    if (reduced) { $('pile').innerHTML = ''; targets.forEach(t => t.innerHTML = dots(n)); tags(); return; }
+    let k = 0; const total = a * n;
+    animTimer = setInterval(() => {
+      const pile = $('pile'); if (!pile) { clearInterval(animTimer); return; }
+      if (pile.lastElementChild) pile.removeChild(pile.lastElementChild);
+      targets[k % a].insertAdjacentHTML('beforeend', '<span class="dot"></span>');
+      if (++k >= total) { clearInterval(animTimer); tags(); }
+    }, Math.max(18, Math.min(60, 900 / total)));
+  }
+
+  function show(id){ ['home', 'play', 'end'].forEach(s => $(s).hidden = s !== id); window.scrollTo(0, 0); }
+  function starHTML(n){ return [0, 1, 2].map(i => `<span class="${i < n ? '' : 'off'}">★</span>`).join(''); }
+  function renderCoins(){ $('coin-total').innerHTML = `<span class="coin"></span>${save.coins}`; }
+
+  function renderHome(){
+    $('levels').innerHTML = LEVELS.map((L, i) => {
+      const locked = i > 0 && !save.stars[i - 1];
+      return `<button class="level" data-i="${i}" ${locked ? 'disabled' : ''} aria-label="Level ${i + 1}: ${L.name}${locked ? ', locked' : ''}">
+        <span class="lv-num">${i + 1}</span>
+        <span class="lv-name">${L.name}</span>
+        <span class="lv-blurb">${locked ? `Earn a star on level ${i} to unlock.` : L.blurb}</span>
+        <span class="stars" aria-label="${save.stars[i]} of 3 stars">${starHTML(save.stars[i])}</span></button>`;
+    }).join('');
+    $('levels').querySelectorAll('.level').forEach(b => b.onclick = () => startLevel(Number(b.dataset.i)));
+    $('shelf').innerHTML = LEVELS.map((L, i) => {
+      const got = save.stars[i] > 0;
+      const name = i === 4 ? (got ? 'Box Keeper (now a friend)' : 'Box Keeper') : L.buddy;
+      return `<div class="shelf-item ${got ? '' : 'locked'}">${buddySVG(i, got)}<span>${got ? name : (i === 4 ? 'Not beaten yet' : 'Still locked')}</span></div>`;
+    }).join('');
+    $('speed-best').textContent = save.speedBest ? `Best on this device: ${save.speedBest} points` : 'No Speed Round score yet.';
+    renderCoins(); renderSound(); show('home');
+  }
+
+  let G = null, timerId = null, advanceId = null;
+  function clearTimers(){ clearInterval(timerId); clearTimeout(advanceId); clearInterval(animTimer); timerId = advanceId = null; }
+
+  function startLevel(i){
+    clearTimers();
+    G = {mode:'level', level:i, hard:i === 4, q:0, hearts:3, mistakes:0, streak:0, earned:0, results:[], locked:false};
+    G.hp = PER_LEVEL; G.taunt = i === 4 ? 'Box Keeper: "Nobody has ever opened my boxes!"' : '';
+    $('hud-title').textContent = `Level ${i + 1}: ${LEVELS[i].name}`;
+    $('story').hidden = false; $('story').textContent = LEVELS[i].story;
+    $('meter').innerHTML = '';
+    show('play'); nextQ();
+  }
+  const TAUNTS_HIT = ['Box Keeper: "Ouch! Lucky guess."', 'Box Keeper: "Hey, my armor!"', 'Box Keeper: "How did you know that?"', 'Box Keeper: "Stop multiplying so well!"'];
+  const TAUNTS_MISS = ['Box Keeper: "Ha! My boxes stay shut."', 'Box Keeper: "Try again, detective."', 'Box Keeper: "Remember, a number next to a letter means times!"'];
+  function startSpeed(){
+    clearTimers();
+    G = {mode:'speed', q:0, score:0, streak:0, earned:0, time:60, locked:false};
+    $('hud-title').textContent = 'Speed Round';
+    $('story').hidden = true; $('meter').innerHTML = '';
+    show('play'); nextQ();
+    const end = Date.now() + 60000; G.end = end;
+    timerId = setInterval(() => {
+      G.time = Math.max(0, (G.end - Date.now()) / 1000);
+      renderMeter();
+      if (G.time <= 0) { clearTimers(); finishSpeed(); }
+    }, 100);
+  }
+  function renderHUD(){
+    if (G.mode === 'level') {
+      $('hearts').hidden = false;
+      $('hearts').innerHTML = [0, 1, 2].map(i => `<svg viewBox="0 0 24 24" aria-hidden="true"><path class="${i < G.hearts ? 'full' : 'empty'}" d="M12 21s-7.5-4.6-9.6-9.2C1 8.4 3 4.5 6.8 4.5c2.2 0 3.6 1.2 5.2 3 1.6-1.8 3-3 5.2-3C21 4.5 23 8.4 21.6 11.8 19.5 16.4 12 21 12 21z"/></svg>`).join('');
+      $('hearts').setAttribute('aria-label', `${G.hearts} of 3 hearts left`);
+      $('hud-score').innerHTML = `<span class="coin"></span>${G.earned}`;
+    } else {
+      $('hearts').hidden = true;
+      $('hud-score').textContent = `${G.score} pts`;
+    }
+    const mult = G.streak >= 5 ? 3 : G.streak >= 3 ? 2 : 1;
+    $('streak').textContent = `Streak ${G.streak}${mult > 1 ? ' · ×' + mult : ''}`;
+    $('streak').classList.toggle('hot', mult > 1);
+  }
+  function renderMeter(){
+    if (G.mode === 'level' && G.level === 4) {
+      $('meter').innerHTML = `<div class="hp"><div class="hp-row">${buddySVG(4, true)}<div class="hp-bar" role="progressbar" aria-label="Box Keeper armor" aria-valuemin="0" aria-valuemax="${PER_LEVEL}" aria-valuenow="${G.hp}"><div style="width:${G.hp / PER_LEVEL * 100}%"></div></div><span class="num">${G.hp}/${PER_LEVEL}</span></div><span class="taunt">${G.taunt}</span></div>`;
+    } else if (G.mode === 'level') {
+      $('meter').innerHTML = '<div class="track" aria-hidden="true">' + Array.from({length:PER_LEVEL}, (_, i) =>
+        `<i class="${G.results[i] === true ? 'ok' : G.results[i] === false ? 'no' : i === G.q ? 'now' : ''}"></i>`).join('') + '</div>';
+    } else {
+      let bar = $('meter').querySelector('.timer');
+      if (!bar) { $('meter').innerHTML = '<div class="timer" role="progressbar" aria-label="Time left"><div></div></div><span class="label num" id="alg-secs"></span>'; bar = $('meter').querySelector('.timer'); }
+      bar.firstElementChild.style.width = (G.time / 60 * 100) + '%';
+      bar.classList.toggle('low', G.time < 10);
+      bar.setAttribute('aria-valuenow', String(Math.ceil(G.time)));
+      $('secs').textContent = `${Math.ceil(G.time)} seconds left`;
+    }
+  }
+  function nextQ(){
+    clearTimeout(advanceId); clearInterval(animTimer);
+    if (G.mode === 'speed') G.q++;
+    const type =G.mode === 'level' ? LEVELS[G.level].type : pick(['eval', 'solve', 'meaning', 'two']);
+    G.cur = makeQ(type, G.mode === 'level' && G.hard);
+    G.locked = false;
+    G.gold = G.mode === 'speed' && G.q > 1 && Math.random() < 0.2;
+    $('golden').hidden = !G.gold; $('play').classList.toggle('gold', G.gold);
+    $('prompt').innerHTML = G.cur.prompt;
+    $('visual').innerHTML = G.cur.visual;
+    $('opts').innerHTML = G.cur.options.map((o, i) => `<button class="opt" data-i="${i}"><span class="key">${i + 1}</span>${o.html}</button>`).join('');
+    $('opts').querySelectorAll('.opt').forEach(b => b.onclick = () => answer(Number(b.dataset.i)));
+    $('feedback').innerHTML = '';
+    renderHUD(); renderMeter();
+  }
+  function floatText(txt){
+    const s = document.createElement('span'); s.className = 'float'; s.textContent = txt;
+    $('play').appendChild(s); setTimeout(() => s.remove(), 1000);
+  }
+  function answer(i){
+    if (G.locked) return; G.locked = true;
+    const q = G.cur, btns = $('opts').querySelectorAll('.opt');
+    const ok = !!q.options[i].right;
+    btns.forEach((b, j) => { b.disabled = true; if (q.options[j].right) b.classList.add('right'); });
+    if (ok) {
+      G.streak++;
+      const mult = G.streak >= 5 ? 3 : G.streak >= 3 ? 2 : 1, gain = 10 * mult;
+      G.earned += gain; sfx.right();
+      if (q.onRight) q.onRight();
+      if (G.mode === 'speed') { const pts = G.gold ? 3 : 1; G.score += pts; floatText(`+${pts}`); }
+      else {
+        G.results[G.q] = true; floatText(`+${gain}`);
+        if (G.level === 4) { G.hp--; G.taunt = G.hp > 0 ? pick(TAUNTS_HIT) : 'Box Keeper: "Okay, okay! You win!"'; renderMeter(); }
+      }
+      renderHUD();
+      if (G.mode === 'speed') { advanceId = setTimeout(nextQ, 450); return; }
+      $('feedback').innerHTML = `<div class="feedback good"><b>Box cracked! ${q.short}</b><div class="row"><button class="primary" id="alg-next">${(G.level === 4 ? G.hp === 0 : G.q === PER_LEVEL - 1) ? 'Finish level' : 'Next box'}</button></div></div>`;
+      $('next').onclick = advance;
+      advanceId = setTimeout(advance, q.onRight ? 2000 : 1500);
+    } else {
+      btns[i].classList.add('wrong');
+      $('opts').classList.remove('shake'); void $('opts').offsetWidth; $('opts').classList.add('shake');
+      G.streak = 0; sfx.wrong();
+      if (G.mode === 'speed') { G.end -= 3000; floatText('−3 sec'); renderHUD(); advanceId = setTimeout(nextQ, 900); return; }
+      G.hearts--; G.mistakes++; G.results[G.q] = false; renderHUD();
+      if (G.level === 4) { G.taunt = pick(TAUNTS_MISS); renderMeter(); }
+      const out = G.hearts <= 0;
+      $('feedback').innerHTML = `<div class="feedback bad"><b>${out ? 'Out of hearts!' : 'Oops, you lost a heart.'}</b><span>${q.why}</span><div class="row"><button class="primary" id="alg-next">${out ? 'See results' : 'Next box'}</button></div></div>`;
+      $('next').onclick = advance; $('next').focus();
+    }
+  }
+  function advance(){
+    clearTimeout(advanceId);
+    if (G.mode !== 'level') return;
+    if (G.hearts <= 0) return levelLost();
+    G.q++;
+    if (G.level === 4 ? G.hp <= 0 : G.q >= PER_LEVEL) return levelWon();
+    nextQ();
+  }
+  function endScreen(html){ $('end').innerHTML = html; show('end'); }
+  function levelWon(){
+    const stars = G.mistakes === 0 ? 3 : G.mistakes === 1 ? 2 : 1;
+    const i = G.level, first = !save.stars[i];
+    save.stars[i] = Math.max(save.stars[i], stars);
+    save.coins += G.earned; persist(); renderCoins();
+    sfx.win(); confetti();
+    const hasNext = i < LEVELS.length - 1;
+    const unlocked = first && hasNext ? `<p>Level ${i + 2}, ${LEVELS[i + 1].name}, is now unlocked.</p>` : '';
+    const allDone = save.stars.every(s => s > 0) ? '<p>You beat every level. Try for 3 stars on each one, or chase a Speed Round record.</p>' : '';
+    const freed = i === 4
+      ? 'You beat the Box Keeper! It promises to stop locking things up, and it wants to be your friend.'
+      : `You freed ${LEVELS[i].buddy}! ${LEVELS[i].buddy} joins your Box Buddies.`;
+    endScreen(`<h2 class="end-title">${i === 4 ? 'Boss defeated!' : `Level ${i + 1} cleared!`}</h2>
+      <div class="reveal">${buddySVG(i, true)}<p><b>${freed}</b></p></div>
+      <div class="big-stars" aria-label="${stars} of 3 stars">${starHTML(stars)}</div>
+      <p><span class="coin"></span><b class="num">${G.earned}</b> coins earned. ${stars < 3 ? 'Play again with no mistakes for 3 stars.' : 'No mistakes. Perfect!'}</p>
+      ${unlocked}${allDone}
+      <div class="btn-row">${hasNext ? `<button class="primary big" id="alg-e-next">Next level</button>` : ''}<button id="alg-e-again">Play again</button><button id="alg-e-home">Levels</button></div>`);
+    if (hasNext) $('e-next').onclick = () => startLevel(i + 1);
+    $('e-again').onclick = () => startLevel(i); $('e-home').onclick = renderHome;
+  }
+  function levelLost(){
+    const right = G.results.filter(r => r === true).length, i = G.level;
+    save.coins += G.earned; persist(); renderCoins(); sfx.lose();
+    endScreen(`<h2 class="end-title">Out of hearts</h2>
+      <p>You cracked <b>${right}</b> ${right === 1 ? 'box' : 'boxes'} on ${LEVELS[i].name} and kept your <span class="coin"></span><b class="num">${G.earned}</b> coins.</p>
+      <p class="muted">Remember: a number next to a letter means multiply. ${LEVELS[i].type === 'solve' ? 'To find the letter, ask "what times this number makes the total?"' : 'Swap the letter for its number, then multiply.'}</p>
+      <div class="btn-row"><button class="primary big" id="alg-e-again">Try again</button><button id="alg-e-home">Levels</button></div>`);
+    $('e-again').onclick = () => startLevel(i); $('e-home').onclick = renderHome;
+  }
+  function finishSpeed(){
+    G.locked = true;
+    const record = G.score > save.speedBest;
+    if (record) save.speedBest = G.score;
+    save.coins += G.earned; persist(); renderCoins();
+    if (record && G.score > 0) { sfx.win(); confetti(); } else sfx.lose();
+    endScreen(`<h2 class="end-title">Time's up!</h2>
+      <span class="big-score num">${G.score} points</span>
+      <p>${record && G.score > 0 ? 'New record on this device!' : `Your best is ${save.speedBest} points.`} You also earned <span class="coin"></span><b class="num">${G.earned}</b> coins.</p>
+      <div class="btn-row"><button class="primary big" id="alg-e-again">Play again</button><button id="alg-e-home">Levels</button></div>`);
+    $('e-again').onclick = startSpeed; $('e-home').onclick = renderHome;
+  }
+
+  $('quit').onclick = () => { clearTimers(); if (G && G.earned) { save.coins += G.earned; persist(); } G = null; renderHome(); };
+  $('speed-start').onclick = startSpeed;
+  document.addEventListener('keydown', e => {
+    if (($('play').hidden || $('app').hidden) || !G) return;
+    if (G.locked) { if (e.key === 'Enter' && $('next')) $('next').click(); return; }
+    const n = Number(e.key);
+    if (n >= 1 && n <= 4) answer(n - 1);
+  });
+
+  renderHome();
+})();
+(function(){
+  const $ = id => document.getElementById('fsb-' + id);
+  const rand = (lo, hi) => lo + Math.floor(Math.random() * (hi - lo + 1));
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+  const shuffle = arr => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const gcd = (a, b) => b ? gcd(b, a % b) : a;
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const F = (n, d) => d === 1 ? String(n) : `<span class="frac" aria-label="${n} over ${d}"><span>${n}</span><span>${d}</span></span>`;
+  const cookies = k => Array.from({length:k}, () => '<span class="cookie"></span>').join('');
+  const PER_LEVEL = 6, BOSS = 4;
+
+  const LEVELS = [
+    {name:'Fair Plates', blurb:'Share cookies equally with division.', type:'share', buddy:'Tilly', story:'Tilly is throwing a party. Every plate needs the same number of cookies.'},
+    {name:'Pizza Split', blurb:'A division can be a fraction.', type:'fracdiv', buddy:'Bram', story:'Bram and his friends are sharing pizzas. Find how much pizza each friend gets.'},
+    {name:'Part of the Tray', blurb:'Find a fraction of a number.', type:'fracof', buddy:'Nori', story:'Nori is decorating cupcakes. Work out how many get sprinkles.'},
+    {name:'Same Slice', blurb:'Find fractions that are equal.', type:'equiv', buddy:'Quince', story:'Quince wants the same amount of cake, cut a different way. Find equal fractions.'},
+    {name:'Crumb Monster', blurb:'Boss level with fraction division.', type:'boss', buddy:'Crumb Monster', story:'The Crumb Monster wants it all! Every right answer calms him down a little.'}
+  ];
+
+  const KEY = 'fsb-game-v1';
+  let save = {stars:[0,0,0,0,0], coins:0, speedBest:0, sound:true};
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && Array.isArray(s.stars)) save = Object.assign(save, s); } catch (e) {}
+  function persist(){ try { localStorage.setItem(KEY, JSON.stringify(save)); } catch (e) {} }
+
+  let actx = null;
+  function tone(freqs, type){
+    if (!save.sound) return;
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      const t0 = actx.currentTime;
+      freqs.forEach((f, i) => {
+        const o = actx.createOscillator(), g = actx.createGain(); o.type = type || 'triangle'; o.frequency.value = f;
+        const t = t0 + i * 0.09;
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.18, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
+        o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + 0.18);
+      });
+    } catch (e) {}
+  }
+  const sfx = {right:() => tone([660, 880]), wrong:() => tone([220, 165], 'sawtooth'), win:() => tone([523, 659, 784, 1047]), lose:() => tone([392, 330, 262], 'square')};
+  function renderSound(){ $('sound').setAttribute('aria-pressed', String(save.sound)); $('sound').textContent = 'Sound: ' + (save.sound ? 'on' : 'off'); }
+  $('sound').onclick = () => { save.sound = !save.sound; persist(); renderSound(); };
+
+  function confetti(){
+    if (reduced) return;
+    const c = $('confetti'), ctx = c.getContext('2d'); if (!ctx) return;
+    const W = c.width = innerWidth, H = c.height = innerHeight;
+    const cs = getComputedStyle(document.documentElement);
+    const cols = ['--berry', '--butter', '--mint', '--hl'].map(k => cs.getPropertyValue(k).trim());
+    const parts = Array.from({length:120}, () => ({x:W/2 + (Math.random()-.5)*W*.3, y:H*.35, vx:(Math.random()-.5)*12, vy:-Math.random()*12-4, r:Math.random()*6+4, c:pick(cols), a:Math.random()*6}));
+    let f = 0;
+    (function step(){
+      ctx.clearRect(0, 0, W, H);
+      parts.forEach(p => { p.vy += 0.35; p.x += p.vx; p.y += p.vy; p.a += 0.2; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a); ctx.fillStyle = p.c; ctx.fillRect(-p.r/2, -p.r/3, p.r, p.r*.66); ctx.restore(); });
+      if (++f < 110) requestAnimationFrame(step); else ctx.clearRect(0, 0, W, H);
+    })();
+  }
+
+  function buddySVG(i, unlocked){
+    const fills = ['--butter', '--mint', '--berry', '--good', '--bad'];
+    const f = unlocked ? `var(${fills[i]})` : 'var(--line)';
+    const bodies = [
+      `<circle cx="40" cy="46" r="28" style="fill:${f}"/><circle cx="40" cy="16" r="7" style="fill:${f}"/>`,
+      `<rect x="13" y="18" width="54" height="56" rx="16" style="fill:${f}"/><rect x="22" y="8" width="8" height="14" rx="4" style="fill:${f}"/><rect x="50" y="8" width="8" height="14" rx="4" style="fill:${f}"/>`,
+      `<path d="M40 10 L70 70 Q72 74 66 74 L14 74 Q8 74 10 70 Z" style="fill:${f}"/>`,
+      `<ellipse cx="40" cy="48" rx="30" ry="25" style="fill:${f}"/><circle cx="18" cy="24" r="9" style="fill:${f}"/><circle cx="62" cy="24" r="9" style="fill:${f}"/>`,
+      `<path d="M8 50 Q6 14 40 12 Q74 14 72 50 Q72 76 40 76 Q8 76 8 50 Z" style="fill:${f}"/><path d="M14 18 L20 4 L28 16 Z M52 16 L60 4 L66 18 Z" style="fill:${f}"/>`
+    ];
+    let face;
+    if (!unlocked) face = `<text x="40" y="58" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="30" style="fill:var(--muted)">?</text>`;
+    else if (i === BOSS) face = `<circle cx="29" cy="40" r="7" fill="#fff"/><circle cx="51" cy="40" r="7" fill="#fff"/><circle cx="30" cy="41" r="3.5" fill="#2A1F3D"/><circle cx="52" cy="41" r="3.5" fill="#2A1F3D"/><path d="M24 56 L30 62 L36 56 L42 62 L48 56 L54 62 L58 56 Q41 70 24 56 Z" fill="#fff" stroke="#2A1F3D" stroke-width="2" stroke-linejoin="round"/>`;
+    else face = `<circle cx="31" cy="46" r="6" fill="#fff"/><circle cx="49" cy="46" r="6" fill="#fff"/><circle cx="32" cy="47" r="3" fill="#2A1F3D"/><circle cx="50" cy="47" r="3" fill="#2A1F3D"/><path d="M32 58 Q40 65 48 58" stroke="#2A1F3D" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+    return `<svg viewBox="0 0 80 80" class="buddy" aria-hidden="true">${bodies[i]}${face}</svg>`;
+  }
+
+  function pie(parts, shaded){
+    const cx = 35, cy = 35, r = 31;
+    let s = '<svg viewBox="0 0 70 70" class="pie" aria-hidden="true">';
+    if (parts === 1) s += `<circle cx="${cx}" cy="${cy}" r="${r}" style="fill:${shaded ? 'var(--berry)' : 'var(--butter-soft)'};stroke:var(--ink);stroke-width:2"/>`;
+    else for (let i = 0; i < parts; i++) {
+      const a0 = -Math.PI / 2 + 2 * Math.PI * i / parts, a1 = -Math.PI / 2 + 2 * Math.PI * (i + 1) / parts;
+      const x0 = cx + r * Math.cos(a0), y0 = cy + r * Math.sin(a0), x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+      s += `<path d="M${cx} ${cy} L${x0.toFixed(2)} ${y0.toFixed(2)} A${r} ${r} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${x1.toFixed(2)} ${y1.toFixed(2)} Z" style="fill:${i < shaded ? 'var(--berry)' : 'var(--butter-soft)'};stroke:var(--ink);stroke-width:2;stroke-linejoin:round"/>`;
+    }
+    return s + '</svg>';
+  }
+  const pies = (count, parts, shaded) => `<div class="pies">${Array.from({length:count}, () => pie(parts, shaded)).join('')}</div>`;
+  const fbar = (parts, shaded, label) => `<div class="bar-row"><span class="bl">${label || ''}</span><div class="fbar" aria-hidden="true">${Array.from({length:parts}, (_, i) => `<span class="${i < shaded ? 'on' : ''}"></span>`).join('')}</div></div>`;
+  const plates = (d, inside) => `<div class="plates">${Array.from({length:d}, () => `<div class="plate"><div class="cookies">${inside === null ? '<span class="q">?</span>' : cookies(inside)}</div></div>`).join('')}</div>`;
+
+  function numOpts(ans, cands){
+    const out = [];
+    shuffle(cands).forEach(v => { v = Math.round(v); if (v > 0 && v !== ans && !out.includes(v) && out.length < 3) out.push(v); });
+    let k = 1; while (out.length < 3) { const v = ans + k * (k % 2 ? 1 : -1) * 2; if (v > 0 && v !== ans && !out.includes(v)) out.push(v); k++; }
+    return shuffle([ans, ...out]).map(v => ({html:String(v), right:v === ans}));
+  }
+  function fracOpts(right, cands){
+    const [rn, rd] = right, out = [];
+    shuffle(cands).forEach(([n, d]) => {
+      if (n > 0 && d > 0 && n * rd !== d * rn && !out.some(([a, b]) => a * d === b * n) && out.length < 3) out.push([n, d]);
+    });
+    let k = 1; while (out.length < 3) { const c = [rn + k, rd]; if (c[0] * rd !== c[1] * rn && !out.some(([a, b]) => a * c[1] === b * c[0])) out.push(c); k++; }
+    return shuffle([right, ...out]).map(([n, d]) => ({html:F(n, d), right:n === rn && d === rd}));
+  }
+
+  let animTimer = null;
+  function genShare(hard){
+    const d = hard ? rand(3, 8) : rand(2, 6), q = hard ? rand(4, 12) : rand(2, 9), t = d * q;
+    const item = pick(['cookies', 'cupcakes', 'muffins', 'donuts']);
+    const drawn = t <= 54 && q <= 12;
+    return {prompt:`Share ${t} ${item} equally on ${d} plates. How many go on each plate?`, eq:`${t} ÷ ${d} = ?`,
+      visual:(drawn ? `<span class="label">${t} ${item} to share</span><div class="pile" id="fsb-pile">${cookies(t)}</div>` : `<span class="label">${t} ${item} to share</span>`) + plates(d, null),
+      options:numOpts(q, [q + 1, q - 1, t - d, d, q + 2, t + d, q * 2]),
+      why:`${t} ÷ ${d} = ${q}, because ${d} × ${q} = ${t}.`, short:`${t} ÷ ${d} = ${q}`,
+      onRight:() => drawn ? dealOut(d, q) : document.querySelectorAll('#fsb-visual .q').forEach(e => e.textContent = q)};
+  }
+  function dealOut(d, q){
+    const targets = Array.from(document.querySelectorAll('#fsb-visual .plate .cookies'));
+    targets.forEach(t => t.innerHTML = '');
+    if (reduced) { const p = $('pile'); if (p) p.innerHTML = ''; targets.forEach(t => t.innerHTML = cookies(q)); return; }
+    let k = 0; const total = d * q;
+    animTimer = setInterval(() => {
+      const pile = $('pile'); if (!pile) { clearInterval(animTimer); return; }
+      if (pile.lastElementChild) pile.removeChild(pile.lastElementChild);
+      targets[k % d].insertAdjacentHTML('beforeend', '<span class="cookie"></span>');
+      if (++k >= total) clearInterval(animTimer);
+    }, Math.max(18, Math.min(60, 900 / total)));
+  }
+  function genFracDiv(hard){
+    const b = rand(2, 6); let a; do { a = rand(1, hard ? Math.min(b + 3, 7) : Math.min(b + 1, 5)); } while (a === b);
+    const thing = pick(['pizza', 'pie', 'cake']), things = a === 1 ? thing : thing + 's';
+    const a2 = Math.min(a, 6);
+    return {prompt:`${a} ${things} ${a === 1 ? 'is' : 'are'} shared equally by ${b} friends. How much does each friend get?`, eq:`${a} ÷ ${b} = ?`,
+      visual:`<span class="label">Each ${thing} cut into ${b} slices</span>` + pies(a2, b, 0),
+      options:fracOpts([a, b], [[b, a], [1, b], [a, a + b], [a + 1, b], [a, b + 1], [1, a], [a * 2, b * 3]]),
+      why:a === 1
+        ? `1 ÷ ${b} = ${F(1, b)}. Cut the ${thing} into ${b} slices, and each friend gets 1 slice.`
+        : `${a} ÷ ${b} = ${F(a, b)}. Cut each ${thing} into ${b} slices. Each friend gets 1 slice from each of the ${a} ${things}, which makes ${F(a, b)}.`,
+      short:`${a} ÷ ${b} = ${F(a, b)}`,
+      onRight:() => { $('visual').innerHTML = `<span class="label">One friend's share: 1 slice from each ${thing}</span>` + pies(a2, b, 1); }};
+  }
+  function genFracOf(hard){
+    const b = rand(2, hard ? 6 : 5), a = rand(1, b - 1), k = rand(2, hard ? 6 : 5), n = b * k, ans = a * k;
+    const groups = sel => `<div class="groups">${Array.from({length:b}, (_, i) => `<div class="group ${sel && i < a ? 'picked' : ''}"><div class="cookies">${cookies(k)}</div><span class="tag">${F(1, b)}</span></div>`).join('')}</div>`;
+    return {prompt:`There are ${n} cupcakes. ${F(a, b)} of them get sprinkles. How many get sprinkles?`, eq:`${F(a, b)} of ${n} = ?`,
+      visual:`<span class="label">${n} cupcakes in ${b} equal groups</span>` + groups(false),
+      options:numOpts(ans, [k, n - ans, n * a, ans + k, a + b, ans - 1, n / a]),
+      why:`Split ${n} into ${b} equal groups of ${k}. ${F(a, b)} means take ${a} of those groups: ${a} × ${k} = ${ans}.`, short:`${F(a, b)} of ${n} = ${ans}`,
+      onRight:() => { $('visual').innerHTML = `<span class="label">${a} of the ${b} groups get sprinkles</span>` + groups(true); }};
+  }
+  function genEquiv(hard){
+    let p, q; do { q = rand(2, 6); p = rand(1, q - 1); } while (gcd(p, q) !== 1);
+    const m = rand(2, hard ? 5 : 4), P = p * m, Q = q * m;
+    if (Math.random() < 0.5) {
+      return {prompt:'Which fraction shows the same amount?', eq:F(P, Q),
+        visual:`<div class="bars">${fbar(Q, P, F(P, Q))}</div>`,
+        options:fracOpts([p, q], [[q, p], [p, q + 1], [p + 1, q], [P, q], [p, Q], [P - 1, Q], [P + 1, Q]]),
+        why:`Divide the top and bottom of ${F(P, Q)} by ${m} to get ${F(p, q)}. The bars show the same amount shaded.`, short:`${F(P, Q)} = ${F(p, q)}`,
+        onRight:() => { $('visual').innerHTML = `<div class="bars">${fbar(Q, P, F(P, Q))}${fbar(q, p, F(p, q))}</div>`; }};
+    }
+    return {prompt:'Find the missing number so both fractions are equal.', eq:`${F(p, q)} = ${F('?', Q)}`,
+      visual:`<div class="bars">${fbar(q, p, F(p, q))}${fbar(Q, 0, F('?', Q))}</div>`,
+      options:numOpts(P, [p, p + m, Q - p, P + 1, P - 1, q, Q - P]),
+      why:`${q} × ${m} = ${Q}, so multiply the top by ${m} too: ${p} × ${m} = ${P}.`, short:`${F(p, q)} = ${F(P, Q)}`,
+      onRight:() => { $('visual').innerHTML = `<div class="bars">${fbar(q, p, F(p, q))}${fbar(Q, P, F(P, Q))}</div>`; }};
+  }
+  function genUnit(){
+    if (Math.random() < 0.5) {
+      const b = rand(2, 5), w = rand(2, 4);
+      return {prompt:`${F(1, b)} of a pan of brownies is shared equally by ${w} friends. What fraction of the whole pan does each friend get?`, eq:`${F(1, b)} ÷ ${w} = ?`,
+        visual:`<div class="bars">${fbar(b, 1, F(1, b))}</div>`,
+        options:fracOpts([1, b * w], [[w, b], [1, b + w], [b, w], [1, b], [w, b * w + 1], [2, b * w]]),
+        why:`Split ${F(1, b)} into ${w} equal pieces. Each piece is ${F(1, b * w)} of the whole pan, because ${b} × ${w} = ${b * w}.`, short:`${F(1, b)} ÷ ${w} = ${F(1, b * w)}`,
+        onRight:() => { $('visual').innerHTML = `<div class="bars">${fbar(b, 1, F(1, b))}${fbar(b * w, 1, F(1, b * w))}</div>`; }};
+    }
+    const w = rand(2, 5), b = rand(2, 4);
+    return {prompt:`How many ${F(1, b)}-cup scoops are in ${w} cups of flour?`, eq:`${w} ÷ ${F(1, b)} = ?`,
+      visual:`<div class="bars">${Array.from({length:w}, (_, i) => fbar(b, 0, `cup ${i + 1}`)).join('')}</div>`,
+      options:numOpts(w * b, [w, b, w + b, w * b + b, w * b - w, w * b + 1]),
+      why:`Each cup holds ${b} scoops of ${F(1, b)} cup. ${w} cups × ${b} scoops = ${w * b} scoops.`, short:`${w} ÷ ${F(1, b)} = ${w * b}`,
+      onRight:() => { $('visual').innerHTML = `<div class="bars">${Array.from({length:w}, (_, i) => fbar(b, b, `cup ${i + 1}`)).join('')}</div>`; }};
+  }
+  function makeQ(type, hard){
+    if (type === 'boss') type = pick(['share', 'fracdiv', 'fracof', 'equiv', 'unit', 'unit']);
+    if (type === 'speed') type = pick(['share', 'fracdiv', 'fracof', 'equiv']);
+    return type === 'share' ? genShare(hard) : type === 'fracdiv' ? genFracDiv(hard) : type === 'fracof' ? genFracOf(hard) : type === 'equiv' ? genEquiv(hard) : genUnit();
+  }
+
+  function show(id){ ['home', 'play', 'end'].forEach(s => $(s).hidden = s !== id); window.scrollTo(0, 0); }
+  const starHTML = n => [0, 1, 2].map(i => `<span class="${i < n ? '' : 'off'}">★</span>`).join('');
+  function renderCoins(){ $('coin-total').innerHTML = `<span class="coin"></span>${save.coins}`; }
+
+  function renderHome(){
+    $('levels').innerHTML = LEVELS.map((L, i) => {
+      const locked = i > 0 && !save.stars[i - 1];
+      return `<button class="level" data-i="${i}" ${locked ? 'disabled' : ''} aria-label="Level ${i + 1}: ${L.name}${locked ? ', locked' : ''}">
+        <span class="lv-num">${i + 1}</span><span class="lv-name">${L.name}</span>
+        <span class="lv-blurb">${locked ? `Earn a star on level ${i} to unlock.` : L.blurb}</span>
+        <span class="stars" aria-label="${save.stars[i]} of 3 stars">${starHTML(save.stars[i])}</span></button>`;
+    }).join('');
+    $('levels').querySelectorAll('.level').forEach(b => b.onclick = () => startLevel(Number(b.dataset.i)));
+    $('shelf').innerHTML = LEVELS.map((L, i) => {
+      const got = save.stars[i] > 0;
+      const label = got ? (i === BOSS ? 'Crumb Monster (now shares)' : L.buddy) : (i === BOSS ? 'Not beaten yet' : 'Still waiting');
+      return `<div class="shelf-item ${got ? '' : 'locked'}">${buddySVG(i, got)}<span>${label}</span></div>`;
+    }).join('');
+    $('speed-best').textContent = save.speedBest ? `Best on this device: ${save.speedBest} points` : 'No Speed Round score yet.';
+    renderCoins(); renderSound(); show('home');
+  }
+
+  let G = null, timerId = null, advanceId = null;
+  const TAUNTS_HIT = ['Crumb Monster: "Hmph. That IS fair."', 'Crumb Monster: "Fine, I will share. A little."', 'Crumb Monster: "Stop being so fair!"', 'Crumb Monster: "How are you so good at fractions?"'];
+  const TAUNTS_MISS = ['Crumb Monster: "Ha! More crumbs for me!"', 'Crumb Monster: "Hint: the bottom number tells how many equal parts."', 'Crumb Monster: "Hint: division means equal groups!"'];
+  function clearTimers(){ clearInterval(timerId); clearTimeout(advanceId); clearInterval(animTimer); timerId = advanceId = null; }
+
+  function startLevel(i){
+    clearTimers();
+    G = {mode:'level', level:i, hard:i === BOSS, q:0, hearts:3, mistakes:0, streak:0, earned:0, results:[], locked:false, hp:PER_LEVEL,
+      taunt:i === BOSS ? 'Crumb Monster: "Sharing? Never! It is all mine!"' : ''};
+    $('hud-title').textContent = `Level ${i + 1}: ${LEVELS[i].name}`;
+    $('story').hidden = false; $('story').textContent = LEVELS[i].story; $('meter').innerHTML = '';
+    show('play'); nextQ();
+  }
+  function startSpeed(){
+    clearTimers();
+    G = {mode:'speed', q:0, score:0, streak:0, earned:0, time:60, locked:false, end:Date.now() + 60000};
+    $('hud-title').textContent = 'Speed Round';
+    $('story').hidden = true; $('meter').innerHTML = '';
+    show('play'); nextQ();
+    timerId = setInterval(() => {
+      G.time = Math.max(0, (G.end - Date.now()) / 1000); renderMeter();
+      if (G.time <= 0) { clearTimers(); finishSpeed(); }
+    }, 100);
+  }
+  function renderHUD(){
+    if (G.mode === 'level') {
+      $('hearts').hidden = false;
+      $('hearts').innerHTML = [0, 1, 2].map(i => `<svg viewBox="0 0 24 24" aria-hidden="true"><path class="${i < G.hearts ? 'full' : 'empty'}" d="M12 21s-7.5-4.6-9.6-9.2C1 8.4 3 4.5 6.8 4.5c2.2 0 3.6 1.2 5.2 3 1.6-1.8 3-3 5.2-3C21 4.5 23 8.4 21.6 11.8 19.5 16.4 12 21 12 21z"/></svg>`).join('');
+      $('hearts').setAttribute('aria-label', `${G.hearts} of 3 hearts left`);
+      $('hud-score').innerHTML = `<span class="coin"></span>${G.earned}`;
+    } else { $('hearts').hidden = true; $('hud-score').textContent = `${G.score} pts`; }
+    const mult = G.streak >= 5 ? 3 : G.streak >= 3 ? 2 : 1;
+    $('streak').textContent = `Streak ${G.streak}${mult > 1 ? ' · ×' + mult : ''}`;
+    $('streak').classList.toggle('hot', mult > 1);
+  }
+  function renderMeter(){
+    if (G.mode === 'level' && G.level === BOSS) {
+      $('meter').innerHTML = `<div class="hp"><div class="hp-row">${buddySVG(BOSS, true)}<div class="hp-bar" role="progressbar" aria-label="Crumb Monster grumpiness" aria-valuemin="0" aria-valuemax="${PER_LEVEL}" aria-valuenow="${G.hp}"><div style="width:${G.hp / PER_LEVEL * 100}%"></div></div><span class="num">${G.hp}/${PER_LEVEL}</span></div><span class="taunt">${G.taunt}</span></div>`;
+    } else if (G.mode === 'level') {
+      $('meter').innerHTML = '<div class="track" aria-hidden="true">' + Array.from({length:PER_LEVEL}, (_, i) =>
+        `<i class="${G.results[i] === true ? 'ok' : G.results[i] === false ? 'no' : i === G.q ? 'now' : ''}"></i>`).join('') + '</div>';
+    } else {
+      let bar = $('meter').querySelector('.timer');
+      if (!bar) { $('meter').innerHTML = '<div class="timer" role="progressbar" aria-label="Time left" aria-valuemin="0" aria-valuemax="60"><div></div></div><span class="label num" id="fsb-secs"></span>'; bar = $('meter').querySelector('.timer'); }
+      bar.firstElementChild.style.width = (G.time / 60 * 100) + '%';
+      bar.classList.toggle('low', G.time < 10);
+      bar.setAttribute('aria-valuenow', String(Math.ceil(G.time)));
+      $('secs').textContent = `${Math.ceil(G.time)} seconds left`;
+    }
+  }
+  function nextQ(){
+    clearTimeout(advanceId); clearInterval(animTimer);
+    if (G.mode === 'speed') G.q++;
+    const type = G.mode === 'level' ? LEVELS[G.level].type : 'speed';
+    G.cur = makeQ(type, G.mode === 'level' && G.hard);
+    G.locked = false;
+    G.gold = G.mode === 'speed' && G.q > 2 && Math.random() < 0.2;
+    $('golden').hidden = !G.gold; $('play').classList.toggle('gold', !!G.gold);
+    $('prompt').innerHTML = G.cur.prompt;
+    $('eq').innerHTML = G.cur.eq;
+    $('visual').innerHTML = G.cur.visual;
+    $('opts').innerHTML = G.cur.options.map((o, i) => `<button class="opt" data-i="${i}"><span class="key">${i + 1}</span>${o.html}</button>`).join('');
+    $('opts').querySelectorAll('.opt').forEach(b => b.onclick = () => answer(Number(b.dataset.i)));
+    $('feedback').innerHTML = '';
+    renderHUD(); renderMeter();
+  }
+  function floatText(txt){ const s = document.createElement('span'); s.className = 'float'; s.textContent = txt; $('play').appendChild(s); setTimeout(() => s.remove(), 1000); }
+  function lastOne(){ return G.level === BOSS ? G.hp <= 0 : G.q >= PER_LEVEL - 1; }
+  function answer(i){
+    if (G.locked) return; G.locked = true;
+    const q = G.cur, btns = $('opts').querySelectorAll('.opt'), ok = !!q.options[i].right;
+    btns.forEach((b, j) => { b.disabled = true; if (q.options[j].right) b.classList.add('right'); });
+    if (ok) {
+      G.streak++;
+      const mult = G.streak >= 5 ? 3 : G.streak >= 3 ? 2 : 1, gain = 10 * mult;
+      G.earned += gain; sfx.right();
+      if (q.onRight) q.onRight();
+      if (G.mode === 'speed') { const pts = G.gold ? 3 : 1; G.score += pts; floatText(`+${pts}`); renderHUD(); advanceId = setTimeout(nextQ, 650); return; }
+      G.results[G.q] = true; floatText(`+${gain}`);
+      if (G.level === BOSS) { G.hp--; G.taunt = G.hp > 0 ? pick(TAUNTS_HIT) : 'Crumb Monster: "Okay, okay! Sharing is fair!"'; renderMeter(); }
+      renderHUD();
+      $('feedback').innerHTML = `<div class="feedback good"><b>Order served! ${q.short}</b><div class="row"><button class="primary" id="fsb-next">${lastOne() ? 'Finish level' : 'Next order'}</button></div></div>`;
+      $('next').onclick = advance;
+      advanceId = setTimeout(advance, 2200);
+    } else {
+      btns[i].classList.add('wrong');
+      $('opts').classList.remove('shake'); void $('opts').offsetWidth; $('opts').classList.add('shake');
+      G.streak = 0; sfx.wrong();
+      if (G.mode === 'speed') { G.end -= 3000; floatText('−3 sec'); renderHUD(); advanceId = setTimeout(nextQ, 1100); return; }
+      G.hearts--; G.mistakes++; G.results[G.q] = false; renderHUD();
+      if (G.level === BOSS) { G.taunt = pick(TAUNTS_MISS); renderMeter(); }
+      const out = G.hearts <= 0;
+      $('feedback').innerHTML = `<div class="feedback bad"><b>${out ? 'Out of hearts!' : 'Oops, you lost a heart.'}</b><span>${q.why}</span><div class="row"><button class="primary" id="fsb-next">${out ? 'See results' : 'Next order'}</button></div></div>`;
+      $('next').onclick = advance; $('next').focus();
+    }
+  }
+  function advance(){
+    clearTimeout(advanceId);
+    if (!G || G.mode !== 'level') return;
+    if (G.hearts <= 0) return levelLost();
+    if (lastOne()) return levelWon();
+    G.q++; nextQ();
+  }
+  function endScreen(html){ $('end').innerHTML = html; show('end'); }
+  function levelWon(){
+    const stars = G.mistakes === 0 ? 3 : G.mistakes === 1 ? 2 : 1, i = G.level, first = !save.stars[i];
+    save.stars[i] = Math.max(save.stars[i], stars); save.coins += G.earned; persist(); renderCoins();
+    sfx.win(); confetti();
+    const hasNext = i < LEVELS.length - 1;
+    const msg = i === BOSS ? 'The Crumb Monster learned to share! Now he helps out in the bakery.' : `${LEVELS[i].buddy} got a fair share and is a happy customer!`;
+    endScreen(`<h2 class="end-title">${i === BOSS ? 'Boss defeated!' : `Level ${i + 1} cleared!`}</h2>
+      <div class="reveal">${buddySVG(i, true)}<p><b>${msg}</b></p></div>
+      <div class="big-stars" aria-label="${stars} of 3 stars">${starHTML(stars)}</div>
+      <p><span class="coin"></span><b class="num">${G.earned}</b> coins earned. ${stars < 3 ? 'Play again with no mistakes for 3 stars.' : 'No mistakes. Perfect!'}</p>
+      ${first && hasNext ? `<p>Level ${i + 2}, ${LEVELS[i + 1].name}, is now unlocked.</p>` : ''}
+      ${save.stars.every(s => s > 0) ? '<p>You served every customer. Go for 3 stars on each level, or set a Speed Round record.</p>' : ''}
+      <div class="btn-row">${hasNext ? '<button class="primary big" id="fsb-e-next">Next level</button>' : ''}<button id="fsb-e-again">Play again</button><button id="fsb-e-home">Levels</button></div>`);
+    if (hasNext) $('e-next').onclick = () => startLevel(i + 1);
+    $('e-again').onclick = () => startLevel(i); $('e-home').onclick = renderHome;
+  }
+  function levelLost(){
+    const right = G.results.filter(r => r === true).length, i = G.level;
+    save.coins += G.earned; persist(); renderCoins(); sfx.lose();
+    const tips = {share:'Division splits a total into equal groups. Ask: what times the number of plates makes the total?',
+      fracdiv:'A fraction is a division. 3 ÷ 4 is the same as 3/4: the top number is what you share, the bottom is how many people share it.',
+      fracof:'To find 2/3 of a number, split it into 3 equal groups, then take 2 of them.',
+      equiv:'Equal fractions come from multiplying or dividing the top and bottom by the same number.',
+      boss:'Splitting a fraction into more pieces makes each piece smaller. Counting how many small pieces fit into wholes makes a bigger number.'};
+    endScreen(`<h2 class="end-title">Out of hearts</h2>
+      <p>You served <b>${right}</b> ${right === 1 ? 'order' : 'orders'} on ${LEVELS[i].name} and kept your <span class="coin"></span><b class="num">${G.earned}</b> coins.</p>
+      <p class="muted">${tips[LEVELS[i].type]}</p>
+      <div class="btn-row"><button class="primary big" id="fsb-e-again">Try again</button><button id="fsb-e-home">Levels</button></div>`);
+    $('e-again').onclick = () => startLevel(i); $('e-home').onclick = renderHome;
+  }
+  function finishSpeed(){
+    G.locked = true;
+    const record = G.score > save.speedBest;
+    if (record) save.speedBest = G.score;
+    save.coins += G.earned; persist(); renderCoins();
+    if (record && G.score > 0) { sfx.win(); confetti(); } else sfx.lose();
+    endScreen(`<h2 class="end-title">Time's up!</h2>
+      <span class="big-score num">${G.score} points</span>
+      <p>${record && G.score > 0 ? 'New record on this device!' : `Your best is ${save.speedBest} points.`} You also earned <span class="coin"></span><b class="num">${G.earned}</b> coins.</p>
+      <div class="btn-row"><button class="primary big" id="fsb-e-again">Play again</button><button id="fsb-e-home">Levels</button></div>`);
+    $('e-again').onclick = startSpeed; $('e-home').onclick = renderHome;
+  }
+
+  $('quit').onclick = () => { clearTimers(); if (G && G.earned) { save.coins += G.earned; persist(); } G = null; $('play').classList.remove('gold'); renderHome(); };
+  $('speed-start').onclick = startSpeed;
+  document.addEventListener('keydown', e => {
+    if (($('play').hidden || $('app').hidden) || !G) return;
+    if (G.locked) { if (e.key === 'Enter' && $('next')) { e.preventDefault(); $('next').click(); } return; }
+    const n = Number(e.key);
+    if (n >= 1 && n <= 4) answer(n - 1);
+  });
+
+  renderHome();
+})();
+(function(){
+  const $ = id => document.getElementById('nb-' + id);
+  const rand = (lo, hi) => lo + Math.floor(Math.random() * (hi - lo + 1));
+  const pick = a => a[Math.floor(Math.random() * a.length)];
+
+  const LEVELS = [
+    {id:'l1', name:'Warm-up', note:'within 10'},
+    {id:'l2', name:'Teens', note:'within 20'},
+    {id:'l3', name:'Two-digit', note:'no regrouping'},
+    {id:'l4', name:'Regroup', note:'carry and borrow'},
+    {id:'l5', name:'Three-digit', note:'up to 999'},
+    {id:'l6', name:'Missing number', note:'? + 8 = 15'}
+  ];
+  const OPS = [{id:'mix', name:'Both + and −'}, {id:'add', name:'Addition +'}, {id:'sub', name:'Subtraction −'}];
+  const MODES = [
+    {id:'blitz', name:'Blitz', note:'60 seconds. Answer as many as you can.'},
+    {id:'club', name:'50 Club', note:'Race through 50 questions. Fastest time wins.'},
+    {id:'practice', name:'Practice', note:'No timer. Strategy tips after misses.'}
+  ];
+
+  const KEY = 'number-blitz-v1';
+  let save = {player:'', level:'l2', op:'mix', mode:'blitz', boards:{}};
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && typeof s === 'object') save = Object.assign(save, s); } catch (e) {}
+  function persist(){ try { localStorage.setItem(KEY, JSON.stringify(save)); } catch (e) {} }
+
+  function addQ(a, b){ return {a, b, op:'+', ans:a + b}; }
+  function subQ(a, b){ return {a, b, op:'−', ans:a - b}; }
+  function gen(level, op){
+    const o = op === 'mix' ? pick(['add', 'sub']) : op;
+    let a, b;
+    switch (level) {
+      case 'l1':
+        if (o === 'add') { a = rand(0, 10); b = rand(0, 10 - a); return addQ(a, b); }
+        a = rand(1, 10); b = rand(0, a); return subQ(a, b);
+      case 'l2':
+        if (o === 'add') { a = rand(2, 18); b = rand(1, 20 - a); return addQ(a, b); }
+        a = rand(6, 20); b = rand(1, a); return subQ(a, b);
+      case 'l3': {
+        const ta = rand(1, 8), oa = rand(0, 9);
+        if (o === 'add') { const tb = rand(1, 9 - ta), ob = rand(0, 9 - oa); return addQ(ta * 10 + oa, tb * 10 + ob); }
+        const tb = rand(1, ta), ob = rand(0, oa); return subQ(ta * 10 + oa, tb * 10 + ob);
+      }
+      case 'l4':
+        if (o === 'add') { do { a = rand(11, 89); b = rand(11, 89); } while ((a % 10) + (b % 10) < 10); return addQ(a, b); }
+        do { a = rand(21, 99); b = rand(11, a - 1); } while ((a % 10) >= (b % 10)); return subQ(a, b);
+      case 'l5':
+        if (o === 'add') { a = rand(100, 899); b = rand(100, 999 - a); return addQ(a, b); }
+        a = rand(200, 999); b = rand(100, a - 1); return subQ(a, b);
+      default: {
+        const q = o === 'add' ? addQ(rand(2, 30), rand(2, 30)) : (() => { const x = rand(10, 50); return subQ(x, rand(2, x - 1)); })();
+        const hide = pick(['a', 'b']);
+        return {a:q.a, b:q.b, op:q.op, ans:q[hide], missing:hide, total:q.ans};
+      }
+    }
+  }
+  function key(q){ return `${q.a}${q.op}${q.b}${q.missing || ''}`; }
+  function problemHTML(q){
+    if (!q.missing) return `${q.a} ${q.op} ${q.b} =`;
+    const gap = '<span class="gap">?</span>';
+    return `${q.missing === 'a' ? gap : q.a} ${q.op} ${q.missing === 'b' ? gap : q.b} = ${q.total}`;
+  }
+  function plain(q){
+    if (!q.missing) return `${q.a} ${q.op} ${q.b} = ${q.ans}`;
+    return `${q.missing === 'a' ? q.ans : q.a} ${q.op} ${q.missing === 'b' ? q.ans : q.b} = ${q.total}`;
+  }
+  function tip(q){
+    if (q.missing) {
+      if (q.op === '+') return `Missing part: ${q.total} − ${q.missing === 'a' ? q.b : q.a} = ${q.ans}.`;
+      return q.missing === 'a' ? `Work backwards: ${q.total} + ${q.b} = ${q.ans}.` : `Ask how far it is from ${q.total} to ${q.a}: ${q.a} − ${q.total} = ${q.ans}.`;
+    }
+    if (q.op === '−') return `Check by adding: ${q.ans} + ${q.b} = ${q.a}.`;
+    if (q.a < 10 && q.b < 10) return q.a + q.b > 10 ? `Make a ten: ${Math.max(q.a, q.b)} + ${10 - Math.max(q.a, q.b)} = 10, then add ${q.ans - 10} more.` : `Count on from ${Math.max(q.a, q.b)}.`;
+    if (q.a < 100 && q.b < 100) {
+      const t = Math.floor(q.a / 10) * 10 + Math.floor(q.b / 10) * 10, o = q.a % 10 + q.b % 10;
+      return `Tens: ${Math.floor(q.a / 10) * 10} + ${Math.floor(q.b / 10) * 10} = ${t}. Ones: ${q.a % 10} + ${q.b % 10} = ${o}. Total: ${t} + ${o} = ${q.ans}.`;
+    }
+    return `Add the ones, then the tens, then the hundreds. Carry when a column makes 10 or more.`;
+  }
+
+  function chipRow(el, list, cur, onPick, cls){
+    el.innerHTML = list.map(x => `<button class="${cls}" data-id="${x.id}" aria-pressed="${x.id === cur}">${cls === 'mode' ? `<b>${x.name}</b><small>${x.note}</small>` : `${x.name}${x.note ? `<small>${x.note}</small>` : ''}`}</button>`).join('');
+    el.querySelectorAll('button').forEach(b => b.onclick = () => { onPick(b.dataset.id); el.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); persist(); renderBoard(); });
+  }
+  const boardKey = () => `${save.mode}|${save.level}|${save.op}`;
+  function boardOptions(){
+    const sel = $('board-mode');
+    sel.innerHTML = '<option value="blitz">Blitz</option><option value="club">50 Club</option>';
+    sel.value = save.mode === 'club' ? 'club' : 'blitz';
+  }
+  function fmtTime(s){ return s.toFixed(1) + 's'; }
+  function renderBoard(){
+    const m = $('board-mode').value, k = `${m}|${save.level}|${save.op}`;
+    const rows = save.boards[k] || [];
+    const lv = LEVELS.find(l => l.id === save.level).name, op = OPS.find(o => o.id === save.op).name;
+    $('board').innerHTML = rows.length
+      ? `<table><thead><tr><th>#</th><th>Player</th><th class="r">${m === 'club' ? 'Time' : 'Score'}</th><th class="r">Accuracy</th></tr></thead><tbody>${rows.map((r, i) =>
+          `<tr><td class="num">${i + 1}</td><td>${esc(r.name)}</td><td class="r num">${m === 'club' ? fmtTime(r.time) : r.score}</td><td class="r num">${r.acc}%</td></tr>`).join('')}</tbody></table>
+         <span class="muted" style="font-size:.8rem">${lv} · ${op}</span>`
+      : `<p class="muted">No ${m === 'club' ? '50 Club' : 'Blitz'} scores yet for ${lv} · ${op}. Play a round to put the first name on the board.</p>`;
+  }
+  function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c])); }
+  $('board-mode').onchange = renderBoard;
+  $('player').value = save.player;
+  $('player').addEventListener('input', () => { save.player = $('player').value.trim(); persist(); });
+
+  function showSetup(){
+    chipRow($('levels'), LEVELS, save.level, v => save.level = v, 'chip');
+    chipRow($('ops'), OPS, save.op, v => save.op = v, 'chip');
+    chipRow($('modes'), MODES, save.mode, v => { save.mode = v; boardOptions(); }, 'mode');
+    boardOptions(); renderBoard();
+    show('setup');
+  }
+  function show(id){ ['setup', 'play', 'results'].forEach(s => $(s).hidden = s !== id); window.scrollTo(0, 0); }
+
+  let actx = null;
+  function beep(f, d, type){ try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); const o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime; o.type = type || 'triangle'; o.frequency.value = f; g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.15, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + d + 0.02); } catch (e) {} }
+
+  const BLITZ_SECS = 60, CLUB_N = 50;
+  let G = null, tick = null, nextT = null;
+  const pad = $('pad');
+  pad.innerHTML = ['1','2','3','4','5','6','7','8','9','⌫','0','✓'].map(k =>
+    `<button data-k="${k}" class="${k === '⌫' ? 'fn' : k === '✓' ? 'enter' : ''}" aria-label="${k === '⌫' ? 'Delete' : k === '✓' ? 'Check answer' : k}">${k === '⌫' ? 'Delete' : k === '✓' ? 'Check' : k}</button>`).join('');
+  pad.querySelectorAll('button').forEach(b => b.addEventListener('click', () => press(b.dataset.k)));
+
+  function start(){
+    clearInterval(tick); clearTimeout(nextT);
+    G = {mode:save.mode, level:save.level, op:save.op, score:0, right:0, wrong:0, streak:0, best:0, typed:'', done:0,
+      missed:[], recent:[], t0:performance.now(), timeLeft:BLITZ_SECS, busy:false};
+    $('h1-lab').textContent = G.mode === 'blitz' ? 'Time' : G.mode === 'club' ? 'Left' : 'Answered';
+    $('timebar').hidden = G.mode !== 'blitz';
+    show('play'); next();
+    if (G.mode !== 'practice') tick = setInterval(update, 100);
+    update();
+  }
+  function next(){
+    let q, tries = 0;
+    do { q = gen(G.level, G.op); tries++; } while (G.recent.includes(key(q)) && tries < 30);
+    G.recent.push(key(q)); if (G.recent.length > 12) G.recent.shift();
+    G.q = q; G.typed = ''; G.busy = false; G.qStart = performance.now();
+    $('problem').innerHTML = problemHTML(q);
+    $('problem').classList.remove('pop'); void $('problem').offsetWidth; $('problem').classList.add('pop');
+    $('arena').className = 'arena'; $('flash').textContent = ''; $('flash').className = 'flash';
+    renderAnswer(); update();
+  }
+  function renderAnswer(){
+    const a = $('answer'); a.textContent = G.typed || '?'; a.classList.toggle('empty', !G.typed);
+  }
+  function press(k){
+    if (!G || G.busy || ($('play').hidden || $('app').hidden)) return;
+    if (k === '⌫') { G.typed = G.typed.slice(0, -1); renderAnswer(); return; }
+    if (k === '✓') { if (G.typed) check(); return; }
+    if (G.typed.length >= 4) return;
+    G.typed += k; renderAnswer();
+    if (G.typed.length >= String(G.q.ans).length) check();
+  }
+  function mult(){ return G.streak >= 10 ? 3 : G.streak >= 5 ? 2 : 1; }
+  function check(){
+    G.busy = true;
+    const val = Number(G.typed), ok = val === G.q.ans;
+    G.done++;
+    if (ok) {
+      G.right++; G.streak++; G.best = Math.max(G.best, G.streak);
+      const fast = performance.now() - G.qStart < 3000;
+      const pts = (10 + (fast ? 5 : 0)) * mult();
+      G.score += pts;
+      $('arena').className = 'arena ok'; $('flash').className = 'flash good';
+      $('flash').textContent = `+${pts}${fast ? ' fast!' : ''}`;
+      beep(620 + Math.min(G.streak, 12) * 30, 0.08);
+      update(); nextT = setTimeout(afterAnswer, 260);
+    } else {
+      G.wrong++; G.streak = 0;
+      G.missed.push({q:G.q, you:val});
+      $('arena').className = 'arena no'; $('flash').className = 'flash bad';
+      $('flash').textContent = G.mode === 'practice' ? `${plain(G.q)}. ${tip(G.q)}` : `It's ${G.q.ans}`;
+      beep(180, 0.18, 'sawtooth');
+      update(); nextT = setTimeout(afterAnswer, G.mode === 'practice' ? 2600 : 900);
+    }
+  }
+  function afterAnswer(){
+    if (!G) return;
+    if (G.mode === 'club' && G.done >= CLUB_N) return finish();
+    if (G.mode === 'blitz' && G.timeLeft <= 0) return finish();
+    next();
+  }
+  function update(){
+    if (!G) return;
+    const elapsed = (performance.now() - G.t0) / 1000;
+    if (G.mode === 'blitz') {
+      G.timeLeft = Math.max(0, BLITZ_SECS - elapsed);
+      $('h1').textContent = Math.ceil(G.timeLeft);
+      const bar = $('timebar'); bar.firstElementChild.style.width = (G.timeLeft / BLITZ_SECS * 100) + '%'; bar.classList.toggle('low', G.timeLeft < 10);
+      if (G.timeLeft <= 0 && !G.busy) { finish(); return; }
+    } else if (G.mode === 'club') {
+      $('h1').textContent = CLUB_N - G.done;
+    } else $('h1').textContent = G.done;
+    $('h2').textContent = G.score;
+    $('h3').textContent = G.streak;
+    $('streak-box').classList.toggle('hot', mult() > 1);
+    $('combo').textContent = mult() > 1 ? `×${mult()} combo` : '';
+  }
+  function finish(){
+    clearInterval(tick); clearTimeout(nextT);
+    const g = G; G = null;
+    const time = (performance.now() - g.t0) / 1000;
+    const acc = g.done ? Math.round(g.right / g.done * 100) : 0;
+    let record = false, rank = 0;
+    if (g.mode !== 'practice' && g.done > 0) {
+      const k = `${g.mode}|${g.level}|${g.op}`, rows = save.boards[k] || [];
+      const entry = {name:save.player || 'Player', score:g.score, time, acc, date:Date.now()};
+      const prevBest = rows[0];
+      rows.push(entry);
+      rows.sort(g.mode === 'club' ? (x, y) => x.time - y.time : (x, y) => y.score - x.score);
+      save.boards[k] = rows.slice(0, 10);
+      rank = save.boards[k].indexOf(entry) + 1;
+      record = rank === 1 && (!prevBest || prevBest !== save.boards[k][0]);
+      persist();
+    }
+    const perQ = g.done ? (time / g.done).toFixed(1) : '0';
+    const head = g.mode === 'club' ? `<span class="label">50 Club time</span><span class="big num">${fmtTime(time)}</span>`
+      : g.mode === 'blitz' ? `<span class="label">Blitz score</span><span class="big num">${g.score}</span>`
+      : `<span class="label">Practice finished</span><span class="big num">${g.right} right</span>`;
+    const praise = acc >= 95 ? 'Sharp shooting!' : acc >= 80 ? 'Strong round. Keep that streak going.' : acc >= 60 ? 'Good effort. Slow down a little to boost accuracy.' : 'Try Practice mode or an easier level to warm up.';
+    const missedHTML = g.missed.length
+      ? `<div class="missed"><h2>Questions to review (${g.missed.length})</h2>${g.missed.slice(0, 25).map(m =>
+          `<div class="miss"><span class="eq">${plain(m.q)}</span><span class="you">You typed ${m.you}</span><span class="tip">${tip(m.q)}</span></div>`).join('')}${g.missed.length > 25 ? `<p class="muted">Showing the first 25.</p>` : ''}</div>`
+      : `<div class="missed"><h2>No mistakes!</h2><p class="muted">Every answer was right. Try the next level up.</p></div>`;
+    $('results').innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:6px">${head}</div>
+      ${record ? '<span class="record">New top score on this device!</span>' : rank ? `<span class="muted">${esc(save.player || 'Player')} is #${rank} on this board.</span>` : ''}
+      <p>${praise}</p>
+      <div class="res-grid">
+        <div class="stat"><span class="label">Correct</span><b>${g.right}</b></div>
+        <div class="stat"><span class="label">Accuracy</span><b>${acc}%</b></div>
+        <div class="stat"><span class="label">Best streak</span><b>${g.best}</b></div>
+        <div class="stat"><span class="label">Per question</span><b>${perQ}s</b></div>
+      </div>
+      ${missedHTML}
+      <div class="btn-row"><button class="go" id="nb-again">Play again</button><button id="nb-change">Change level or mode</button></div>`;
+    $('again').onclick = start; $('change').onclick = showSetup;
+    show('results'); $('again').focus();
+  }
+
+  $('start').onclick = () => { save.player = $('player').value.trim(); persist(); start(); };
+  $('quit').onclick = () => { if (!G) return; if (G.done > 0) finish(); else { clearInterval(tick); clearTimeout(nextT); G = null; showSetup(); } };
+  document.addEventListener('keydown', e => {
+    if (($('play').hidden || $('app').hidden) || !G) return;
+    if (/^[0-9]$/.test(e.key)) { press(e.key); e.preventDefault(); }
+    else if (e.key === 'Backspace') { press('⌫'); e.preventDefault(); }
+    else if (e.key === 'Enter') { press('✓'); e.preventDefault(); }
+  });
+
+  showSetup();
+})();
+
+(function(){
+  const ROUTES = {algebra:'alg', fractions:'fsb', blitz:'nb'};
+  let current = null;
+  const read = k => { try { return JSON.parse(localStorage.getItem(k)) || null; } catch (e) { return null; } };
+  function progress(){
+    const starLine = (k, total) => { const s = read(k); const n = s && Array.isArray(s.stars) ? s.stars.reduce((a, b) => a + b, 0) : 0;
+      return n ? `${n} of ${total} stars · ${s.coins || 0} coins` : 'Not started yet'; };
+    document.getElementById('prog-alg').textContent = starLine('mba-game-v1', 15);
+    document.getElementById('prog-fsb').textContent = starLine('fsb-game-v1', 15);
+    const nb = read('number-blitz-v1');
+    let best = 0, rounds = 0;
+    if (nb && nb.boards) Object.keys(nb.boards).forEach(k => { const rows = nb.boards[k] || []; rounds += rows.length; if (k.startsWith('blitz|')) rows.forEach(r => best = Math.max(best, r.score)); });
+    document.getElementById('prog-nb').textContent = rounds ? `${rounds} scores on the board${best ? ` · best Blitz ${best}` : ''}` : 'Not started yet';
+  }
+  function route(){
+    const g = ROUTES[location.hash.slice(1)] || null;
+    if (current && current !== g) {
+      const play = document.getElementById(current + '-play'), quit = document.getElementById(current + '-quit');
+      if (play && !play.hidden && quit) quit.click();
+    }
+    Object.values(ROUTES).forEach(p => document.getElementById(p + '-app').hidden = p !== g);
+    document.getElementById('hub').hidden = !!g;
+    document.getElementById('appbar').hidden = !g;
+    document.body.className = g ? 'g-' + g : 'g-hub';
+    current = g;
+    if (!g) progress();
+    window.scrollTo(0, 0);
+  }
+  document.getElementById('back').addEventListener('click', e => { e.preventDefault(); if (location.hash) location.hash = ''; else route(); });
+  window.addEventListener('hashchange', route);
+  route();
+})();
+</script>
+
+</body></html>
